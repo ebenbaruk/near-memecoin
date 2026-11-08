@@ -18,6 +18,7 @@
 Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
 
 ## Points d'attention
+- Budget opérateur : environ 31 NEAR le 2026-11-08 ; il en faut plus pour le déploiement final, le tournage et les bots : refinancer au faucet une fois le délai passé.
 - **Faucet limité par IP** : `helper.nearprotocol.com` a répondu `429 Rate limit exceeded, retry in 8 hours` après une dizaine de créations. L'opérateur `acr-ops.testnet` a environ 54 NEAR (cible 150). Ne pas relancer `scripts/fund-operator.sh` avant le délai. Impact sur `Try it, no wallet` et `try:testnet` : le flux doit tenir le 429 proprement, et les juges auront leur propre IP.
 
 ## Bloqué
