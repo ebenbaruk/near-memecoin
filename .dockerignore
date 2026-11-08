@@ -1,0 +1,12 @@
+node_modules
+**/node_modules
+target
+var
+.git
+.env
+.env.*
+test-results
+web/dist
+sim/out
+fixtures
+docs-assets
