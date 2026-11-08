@@ -21,10 +21,10 @@ A NEP-141 memecoin on NEAR testnet where the rug is a public, priced, permission
 There is no admin, no oracle, no insider allocation, and the contract account has **zero access keys**. Bots and whales probably win. That is measured below and said plainly.
 
 ```
-T = ceil(tau * max(S, floor(0.9 * HWM)))     tau = 5 %, S = supply, HWM = highest supply ever
+T = ceil(tau * max(S, floor(0.9 * HWM)))     tau = 5 %, S = supply, HWM = remembered high of the supply
 ```
 
-The `0.9 * HWM` term stops anyone from selling the supply down just before a rug to make `T` cheap. A rug burns tokens but does not take NEAR out of the curve reserve, so burned tokens' NEAR stays locked for good.
+`HWM` rises with every buy that sets a new high. A rug resets it to `max(supply after the burn, 0.9 * HWM)`, so it shrinks by at most 10 % per rug. The `0.9 * HWM` term stops anyone from selling the supply down just before a rug to make `T` cheap. A rug burns tokens but does not take NEAR out of the curve reserve, so burned tokens' NEAR stays locked for good.
 
 ## Judge it in 5 minutes
 
