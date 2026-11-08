@@ -6,3 +6,4 @@
 - [ ] Publier le post X de démo (texte et vidéo préparés par Claude), qui tague @NEARProtocol et #NEARHackathon.
 - [ ] Donner le « go » final pour la soumission (Claude envoie par l'API).
 - [ ] (Optionnel) Un compte testnet dédié pour l'opérateur, ou laisser Claude le créer via le faucet.
+- [ ] Connexion Railway pour héberger la démo : `! npx -y @railway/cli@latest login --browserless` dans la session (ou fournir un `RAILWAY_TOKEN` dans `.env`).
