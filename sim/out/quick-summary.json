@@ -1,0 +1,214 @@
+{
+ "cell": {
+  "tauPct": 5,
+  "feePct": 2,
+  "aYocto": "10000000000000",
+  "potMinNear": 1
+ },
+ "rows": [
+  {
+   "id": "organic",
+   "whalePolicy": null,
+   "noRugPct": 0,
+   "medianRugs": 2,
+   "rugsP10": 2,
+   "rugsP90": 3,
+   "firstRugMedian": 17.333333333333332,
+   "intervalMedian": 18.958333333333332,
+   "potAtRugMedian": 170.78691576272,
+   "orphanPotMedian": 94.371601151236,
+   "gapPositiveDays": {
+    "holder": 8.333333333333332,
+    "buy": 0,
+    "exit": 0
+   },
+   "supplyVsControl": {
+    "median": -13.506093104372363,
+    "ci": [
+     -15.406860914810338,
+     -3.772577580630343
+    ]
+   },
+   "retailVsA": {
+    "median": 2.7680192114382765,
+    "ci": [
+     2.712730367847714,
+     3.195673154118312
+    ]
+   },
+   "retailVsB": {
+    "median": -1.1947105941746643,
+    "ci": [
+     -1.2483737918184865,
+     -0.7607482170429951
+    ]
+   },
+   "retailReturnMedian": -2.272227863164434,
+   "retailWinnersMedian": 15.06186121570737,
+   "who": {
+    "retail": 1,
+    "sniper": 11,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pot": {
+    "retail": 101.111840386938,
+    "sniper": 2174.3287820105797,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pnlMedian": {
+    "retail": -293.42769707905717,
+    "sniper": 2.12341969293298,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "concentration": 0.8472222222222221,
+   "supplyTable": {
+    "d10": 20986271.86461847,
+    "d30": 17182113.32417052,
+    "d60": 9223976.410790341,
+    "burned": 2093450.9894934986
+   }
+  },
+  {
+   "id": "whale",
+   "whalePolicy": "myope",
+   "noRugPct": 0,
+   "medianRugs": 2,
+   "rugsP10": 2,
+   "rugsP90": 3,
+   "firstRugMedian": 17.583333333333332,
+   "intervalMedian": 18.958333333333332,
+   "potAtRugMedian": 203.53233579006599,
+   "orphanPotMedian": 94.726303727188,
+   "gapPositiveDays": {
+    "holder": 0,
+    "buy": 0,
+    "exit": 30
+   },
+   "supplyVsControl": {
+    "median": -12.795177904822918,
+    "ci": [
+     -46.1218266918018,
+     -6.075506131276831
+    ]
+   },
+   "retailVsA": {
+    "median": -2.3946086507849556,
+    "ci": [
+     -3.149784144005914,
+     -1.3996218501524487
+    ]
+   },
+   "retailVsB": {
+    "median": -6.539740994911696,
+    "ci": [
+     -7.2753099378447,
+     -5.553736008312979
+    ]
+   },
+   "retailReturnMedian": -2.789068698288555,
+   "retailWinnersMedian": 18.732782369146005,
+   "who": {
+    "retail": 0,
+    "sniper": 0,
+    "whale": 12,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pot": {
+    "retail": 0,
+    "sniper": 0,
+    "whale": 2626.6917088836744,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pnlMedian": {
+    "retail": -368.6427152632111,
+    "sniper": 0,
+    "whale": 276.36918480227837,
+    "wash": 0,
+    "sybil": 0
+   },
+   "concentration": 1,
+   "supplyTable": {
+    "d10": 23763559.731962867,
+    "d30": 20234511.85086452,
+    "d60": 11858780.155302238,
+    "burned": 2252809.1582518416
+   }
+  },
+  {
+   "id": "tiny",
+   "whalePolicy": null,
+   "noRugPct": 0,
+   "medianRugs": 2,
+   "rugsP10": 2,
+   "rugsP90": 2,
+   "firstRugMedian": 16.5,
+   "intervalMedian": 24.166666666666668,
+   "potAtRugMedian": 4.5952372845775,
+   "orphanPotMedian": 1.374160614977,
+   "gapPositiveDays": {
+    "holder": 0,
+    "buy": 0,
+    "exit": 21.666666666666668
+   },
+   "supplyVsControl": {
+    "median": 24.645351273632564,
+    "ci": [
+     -15.97152475608139,
+     123.11104594186016
+    ]
+   },
+   "retailVsA": {
+    "median": 1.9651313626976696,
+    "ci": [
+     1.6012508218338901,
+     2.3296530506041533
+    ]
+   },
+   "retailVsB": {
+    "median": -1.9910394547391679,
+    "ci": [
+     -2.4432238793439875,
+     -1.62782875317282
+    ]
+   },
+   "retailReturnMedian": -2.9104434607620044,
+   "retailWinnersMedian": 21.428571428571427,
+   "who": {
+    "retail": 8,
+    "sniper": 2,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pot": {
+    "retail": 37.542002246703,
+    "sniper": 8.175169584598,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "pnlMedian": {
+    "retail": -7.863245475698992,
+    "sniper": 0,
+    "whale": 0,
+    "wash": 0,
+    "sybil": 0
+   },
+   "concentration": 0.6800000000000002,
+   "supplyTable": {
+    "d10": 2342909.8260554345,
+    "d30": 2348200.822353102,
+    "d60": 1146884.1179798984,
+    "burned": 293006.7267948194
+   }
+  }
+ ]
+}

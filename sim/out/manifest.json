@@ -1,0 +1,17 @@
+{
+ "git_sha": "419b16ca4bc9f6a067b181e649f56ef4c4f6b363",
+ "node": "v24.22.2",
+ "seeds": {
+  "step1": 20,
+  "step2_screen": 20,
+  "step2_confirm": 100,
+  "lhs_screen": 3,
+  "lhs": 5,
+  "final": 100
+ },
+ "thresholds_sha256": "1f57dd8b71226570a7cb676ee8ef98573ee1fb8f47e51bf07a40958e61e595a3",
+ "params_sha256": "6a0fcf37a9fa8fee44a969267285e4fcd4826ce35b6fb9b6d8124a4ee8b1f8ef",
+ "runs_final": 3700,
+ "violations": 0,
+ "duration_minutes": 142.0034
+}

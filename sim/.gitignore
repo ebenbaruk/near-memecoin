@@ -1,0 +1,3 @@
+# Per-run dumps can reach tens of MB. Regenerate them with `npm run sim`.
+out/runs/
+out/*.tmp

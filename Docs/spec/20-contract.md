@@ -275,25 +275,25 @@ No code path mutates `params`; no key can deploy or sign for the account. NEAR's
 
 Do not promise a "no deploy import in the wasm" check: `PromiseAction::add` references every action host function, so those imports likely remain. The proof is zero keys plus the source review.
 
-## 11. Concrete parameters (provisional until the simulator, then frozen at deploy)
+## 11. Concrete parameters (frozen after the simulator, see `00-INDEX.md`)
 
 | Param | Live demo | Fast instance |
 |---|---|---|
 | name / symbol | Anyone Can Rug / RUGPRICE | Anyone Can Rug (fast) / RUGFAST |
 | p0 | `"10000000000000000000"` (1e19, 0.00001 NEAR) | `"5000000000000000000"` (0.000005) |
-| a | `"10000000000000"` (1e13) | `"50000000000000"` (5e13) |
+| a | `"100000000000000"` (1e14) | `"50000000000000"` (5e13) |
 | fee_bps / tau_bps / hwm_floor_bps | 200 / 500 / 9000 | 200 / 500 / 9000 |
-| pot_min | `"1000000000000000000000000"` (1 NEAR) | `"50000000000000000000000"` (0.05) |
+| pot_min | `"50000000000000000000000"` (0.05 NEAR) | `"50000000000000000000000"` (0.05) |
 | min_buy | `"50000000000000000000000"` (0.05) | `"20000000000000000000000"` (0.02) |
 | journal_fee / rug_fee | `"3000000000000000000000"` / `"6000000000000000000000"` | same |
 
-Worked: live at S = 1M $RUGPRICE: spot 0.00002, R = 15 NEAR, T = 50 000 $RUGPRICE, buy-then-rug cost 1.066 NEAR, so pot ≥ 1 NEAR needs about 3.55× reserve turnover. Fast at S = 100k: R = 0.75, cost 0.053, same turnover. Ratio τ/f = 2.5 inside the measured viable zone.
+Worked: live at S = 1M $RUGPRICE: spot 0.00011, R = 60 NEAR, T = 50 000 $RUGPRICE, buy-then-rug cost about 5.75 NEAR, so the pot catches the price after about 4.8× reserve turnover. Fast at S = 100k: spot 0.00001, R = 0.75, T = 5 000, cost about 0.053, about 3.5× turnover. Ratio τ/f = 2.5 inside the measured viable zone.
 Before the final deployment, run the simulator with exactly these integers; if it moves them, change only the init JSON (a new deployment). Do not change any contract source for tuning.
 
 `deploy/{live,fast}.json` are the canonical init files (`sim/out/selected-params.json` only feeds them). `deploy/live.json` example init:
 
 ```json
-{"params":{"name":"Anyone Can Rug","symbol":"RUGPRICE","p0":"10000000000000000000","a":"10000000000000","fee_bps":200,"tau_bps":500,"hwm_floor_bps":9000,"pot_min":"1000000000000000000000000","min_buy":"50000000000000000000000","journal_fee":"3000000000000000000000","rug_fee":"6000000000000000000000"}}
+{"params":{"name":"Anyone Can Rug","symbol":"RUGPRICE","p0":"10000000000000000000","a":"100000000000000","fee_bps":200,"tau_bps":500,"hwm_floor_bps":9000,"pot_min":"50000000000000000000000","min_buy":"50000000000000000000000","journal_fee":"3000000000000000000000","rug_fee":"6000000000000000000000"}}
 ```
 
 ## 12. Threats

@@ -13,7 +13,7 @@ Chaque memecoin a un prix secret auquel un initié peut partir avec l'argent. Ic
 - Écart affiché : acheter-puis-ruguer (`get_gap_buy`) ; les deux autres sont dans un dépliant.
 - Journal de chaque mint et burn dans le contrat, prépayé, lisible sans backend ; événements NEP-297 en plus.
 - `storage_unregister` panique toujours (déviation NEP-145 assumée).
-- Paramètres provisoires dans `deploy/{live,fast}.json`, figés après simulation (`30-simulation.md`), avant le déploiement final. Deux instances, même wasm : `live` et `fast`.
+- Paramètres figés dans `deploy/{live,fast}.json` après simulation (`30-simulation.md`), avant le déploiement final. Deux instances, même wasm : `live` et `fast`.
 
 ## Carte des documents
 

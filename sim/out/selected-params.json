@@ -1,0 +1,20 @@
+{
+ "tau_bps": 500,
+ "fee_bps": 200,
+ "hwm_floor_bps": 9000,
+ "pot_min": "50000000000000000000000",
+ "min_buy": "50000000000000000000000",
+ "journal_fee": "3000000000000000000000",
+ "rug_fee": "6000000000000000000000",
+ "reg_min": "1250000000000000000000",
+ "p0": "10000000000000000000",
+ "a": "100000000000000",
+ "tau_pct": 5,
+ "fee_pct": 2,
+ "a_near": 1e-10,
+ "p0_near": 0.00001,
+ "pot_min_near": 0.05,
+ "tau_over_f": 2.5,
+ "score": 0.815,
+ "selection_rule": "Docs/spec/30-simulation.md section 5"
+}
