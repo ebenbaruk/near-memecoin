@@ -1,34 +1,20 @@
 # Avancement
 
-**Phase actuelle : 2, la spec** (brainstorm terminé : Anyone Can Rug, voir `05-brainstorm-wow.md`). En attente des captures d'inspiration de l'humain.
+**Phase actuelle : 3, le build.** Rien n'est encore construit : ni contrat, ni simulateur, ni page. Aucun asset produit.
+
+## Par où commencer
+1. Lire `Docs/spec/10-spec.md`, puis la partie concernée de `Docs/spec/`.
+2. Suivre le plan jour par jour de `Docs/spec/50-delivery.md` (date limite : **2026-11-14 23:59 UTC**).
+3. Premières actions : vérifier le sandbox NEAR sur ARM64 (test `sandbox_smoke`, sinon repli testnet décrit dans `20-contract.md`) ; construire le contrat et ses tests ; simulateur en BigInt avec vecteurs partagés ; figer les paramètres **avant** le déploiement.
+4. Mettre à jour ce fichier à chaque étape.
 
 ## Fait
-- 2026-11-08 :
-  - Recherche complète sur le hackathon et la catégorie Memecoins (`01-hackathon-et-categorie.md`, sources dans `sources/`).
-  - Mise en place du dossier : CLAUDE.md, Docs, git local (pas encore de dépôt distant).
+- 2026-11-08 : recherche, brainstorm (Anyone Can Rug), dépôt privé créé, spec écrite puis relue (cohérence, audit de sécurité, conformité, design), corrections appliquées.
+- Test testnet : un `yield` non repris s'exécute après 201 blocs et peut se réarmer. **Retiré du design** ; preuve dans `04-brainstorm-tour1.md`.
+- Prototype de simulation en flottants, à titre de référence seulement : `var/prototypes/rug-sim/` (hors git).
 
-## Prochaines étapes
-1. Brainstorm avec l'humain, en partant de `02-brainstorm.md` → choisir la piste, le nom, le ticker et le pitch.
-2. Écrire `10-spec.md` :
-   - mécanique et paramètres ;
-   - interface du contrat ;
-   - scénarios de simulation ;
-   - page ;
-   - README ;
-   - plan du 9 au 14 nov.
-3. Build : contrat et tests → déploiement testnet → simulateur à 60 jours → page → README → vidéo → post X → soumission.
-
-## Calendrier conseillé (à ajuster dans la spec)
-
-| Jour | Objectif |
-|---|---|
-| dim. 8 nov | Brainstorm et spec |
-| lun. 9 | Contrat NEP-141 + mécanique + tests unitaires ; déploiement testnet |
-| mar. 10 | Simulateur (60 jours, scénarios, graphiques) → choix des paramètres définitifs ; redéploiement |
-| mer. 11 | Page : état, progression, journal des mint et burn, actions |
-| jeu. 12 | Agents de démo, hébergement, e2e Playwright, captures |
-| ven. 13 | README pour juges IA, vidéo, `npm run verify` ; citer ce projet dans le README de TokenGo |
-| sam. 14 | Marge, dépôt public, post X et soumission (avec accord de l'humain) **avant 23 h 59 UTC** |
+## Reste à valider par le propriétaire, au moment venu
+Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
 
 ## Bloqué
 - Rien.

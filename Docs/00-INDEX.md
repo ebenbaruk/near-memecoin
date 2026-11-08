@@ -3,9 +3,11 @@
 | Fichier | Contenu | État |
 |---|---|---|
 | `01-hackathon-et-categorie.md` | Calendrier, règles, catégorie Memecoins (prompt officiel et exigences), concurrence, partenaires, ressources | ✅ fait (recherche du 2026-11-08) |
-| `02-brainstorm.md` | Grille de notation, 10 pistes, questions à trancher, décision | 🟡 à faire avec l'humain |
+| `02-brainstorm.md` | Grille de notation, 10 pistes, questions à trancher, décision | ✅ décidé |
+| `04-brainstorm-tour1.md`, `05-brainstorm-wow.md` | Idées, attaques, avis simulés, règles après attaque | ✅ |
 | `03-heritage-tokengo.md` | Obligation de citer TokenGo (Q-015), savoir-faire réutilisable, pièges connus | ✅ |
-| `10-spec.md` | Spec du projet retenu : mécanique, paramètres, contrat, simulation, page, README, plan jour par jour | ⬜ après le brainstorm |
+| `spec/10-spec.md` | **Point d'entrée de la spec** : pitch, règles, carte des documents, ordre de build | ✅ |
+| `spec/20-contract.md` · `30-simulation.md` · `40-product-frontend.md` · `41-visual-direction.md` · `50-delivery.md` | Contrat, simulateur, produit et front, direction artistique, livraison (tests, vidéo, README, soumission) | ✅ relus |
 | `PROGRESS.md` | Où on en est | à jour |
 | `HUMAN-TODO.md` | Ce que seul l'humain peut faire | à jour |
 | `sources/` | Copies brutes des sources officielles : HACKATHON.md, prompt de la catégorie, NEP-141, compétence agent `near-smart-contracts`, meme.cooking, BRRRAIN | — |

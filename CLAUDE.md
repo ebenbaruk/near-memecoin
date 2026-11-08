@@ -2,19 +2,23 @@
 
 **2e projet** du propriétaire pour le **NEAR HACKATHON**, catégorie **`memecoins` — « Memecoins With Mechanics »** (« The joke needs rules » : la mécanique est notée, pas le graphique de prix).
 Le 1er projet est **TokenGo** (catégorie `games`, déjà soumis), dans `../TokenGo`, https://github.com/ebenbaruk/TokenGo.
-Le nom de ce projet n'est pas encore choisi : « NEAR-Memecoin » est le nom du dossier, provisoire.
+**Le projet : Anyone Can Rug ($RUGPRICE)**, « Every coin has a rug price. This one prints it. » « NEAR-Memecoin » n'est plus que le nom du dossier. Dépôt privé : https://github.com/ebenbaruk/near-memecoin.
 
 - **Date limite : samedi 2026-11-14 23:59 UTC** (dimanche 00 h 59 à Paris). Jugement du 16 au 18 nov. Démo en ligne au moins jusqu'au 18 nov, idéalement jusqu'au 25.
 - **Tout le contexte est dans `Docs/`** (commencer par `Docs/00-INDEX.md`). Si le code et la spec divergent, corriger l'un ou l'autre *et* noter la décision dans le journal de `Docs/00-INDEX.md`.
 - Le propriétaire parle **français** : répondre en français. Code, interface, README et post X en **anglais**.
 
 ## Où on en est : phases
-1. **Brainstorm** (avec l'humain) → `Docs/02-brainstorm.md` : pistes, grille de notation, choix final.
-2. **Spec** → `Docs/10-spec.md` : mécanique exacte, paramètres, contrat, page, simulation, plan jour par jour.
-3. **Build** en autonomie : contrat → simulation → page → README → vidéo → soumission.
+1. **Brainstorm** : terminé. Décision et raisons dans `Docs/02-brainstorm.md` et `Docs/05-brainstorm-wow.md`.
+2. **Spec** : terminée et relue. **Point d'entrée : `Docs/spec/10-spec.md`**. Détails : `20-contract`, `30-simulation`, `40-product-frontend`, `41-visual-direction`, `50-delivery` (même dossier). En cas de conflit, le contrat fait foi.
+3. **Build** en autonomie, phase actuelle : contrat → simulation → page et assets → tests e2e → README → vidéo → soumission.
 
-Lire `Docs/PROGRESS.md` pour savoir quelle phase est en cours. Pendant le brainstorm, être **force de proposition**, en challengeant avec la grille de `Docs/02-brainstorm.md`, sans se contenter d'acquiescer.
-Une fois la spec validée, **décider seul** (comme pour TokenGo), sauf ce qui est listé dans « Jamais sans confirmation ».
+**Pour démarrer une session : lire `Docs/PROGRESS.md`, puis `Docs/spec/10-spec.md`, et continuer sans demander.** Décider seul, sauf ce qui est listé dans « Jamais sans confirmation ». Sous-agents et workflows sans limite de tokens pour le build (accord du propriétaire).
+
+
+
+
+
 
 ## Règles du hackathon qui ne se négocient pas
 - **Deux projets par personne au maximum, indépendants, et chaque README cite l'autre** (règle Q-015). Donc :
@@ -51,7 +55,9 @@ Une fois la spec validée, **décider seul** (comme pour TokenGo), sauf ce qui e
 - Hébergement : Railway (on sait le faire) ou page statique.
 
 ## Jamais sans confirmation explicite de l'humain
-- Soumettre au hackathon, poster sur X, rendre le dépôt public, faire un push ou un force-push.
+- Soumettre au hackathon, poster sur X, rendre le dépôt public, purger l'historique git, faire un force-push, pousser sur le dépôt TokenGo.
+- Les commits et push normaux sur le dépôt **privé** de ce projet sont autorisés.
+- Avant de rendre public : retirer les données personnelles (e-mail, Telegram) de ce fichier, et purger l'historique, avec accord.
 - Signer quoi que ce soit sur **mainnet** (y compris un lancement sur meme.cooking), dépenser de l'argent réel.
 - Committer un secret. Les clés vont dans `.env`, jamais committé ; `.env.example` est tenu à jour.
 
