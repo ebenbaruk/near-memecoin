@@ -19,3 +19,4 @@
 | 2026-11-08 | 2e projet du propriétaire pour le NEAR HACKATHON, catégorie `memecoins` ; indépendant de TokenGo, les deux README se citent | Règle Q-015 ; catégorie peu disputée (11 projets sur 286, dont 2 seulement uniquement dans cette catégorie) |
 | 2026-11-08 | Testnet uniquement ; aucun lancement mainnet (meme.cooking) sans accord explicite | Règle Q-010 ; argent réel |
 | 2026-11-08 | Projet retenu : **Anyone Can Rug** (repli : IZNOP) ; After You écarté faute de « waouh » | Premier chez le degen et la salle du hackathon, sans précédent exact trouvé ; zone de paramètres viable en simulation. Décidé par Claude sur délégation |
+| 2026-11-08 | `get_gap_buy` : marge `dx` portée de `+1` à `+1 + ONE/a + 2`, calcul poursuivi quand c'est infaisable | L'`isqrt` plancher peut minter jusqu'à `ONE/a + 1` unités de moins que `dx` : avec `+1`, le lot achat+rug pouvait échouer. Tolérance de `prop_no_free_rug` ajustée d'autant |

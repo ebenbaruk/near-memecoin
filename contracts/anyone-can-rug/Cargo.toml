@@ -1,0 +1,23 @@
+[package]
+name = "anyone-can-rug"
+description = "Anyone Can Rug ($RUGPRICE): a NEP-141 memecoin whose rug is a public, priced, permissionless action"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+repository = "https://github.com/ebenbaruk/near-memecoin"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "5.30.1"
+near-contract-standards = "5.30.1"
+uint = { version = "0.10", default-features = false }
+
+[dev-dependencies]
+near-sdk = { version = "5.30.1", features = ["unit-testing"] }
+proptest = "1"
+near-parameters = "=0.38.0"
+serde_json = "1"
+

@@ -202,9 +202,9 @@ All three values exclude gas; `value` can be negative, so serialize as `{ positi
 
 - **`get_gap_holder`** ("you hold ≥ T, sell or rug?"): feasible iff `T ≤ S` and `pot ≥ pot_min`. `value = (pot − rug_fee) − net_sell(T)`, `net_sell(v) = gross − ceil(gross*fee_bps/10000)`, `gross = r(x) − r(x−v)`. Tokens needed: T.
 - **`get_gap_buy(account_id?)`**: with `bal = balance or 0`. All subtractions saturate at 0 (never underflow). Solve size (C2), rounded up, plus 1 base-unit margin:
-  `dx = max(sat(ceil((tau_bps*S − bal*10000)/(10000−tau_bps))), sat(ceil(tau_bps*floor(hwm*9000/10000)/10000) − bal)) + 1`.
+  `dx = max(sat(ceil((tau_bps*S − bal*10000)/(10000−tau_bps))), sat(ceil(tau_bps*floor(hwm*9000/10000)/10000) − bal)) + 1 + floor(ONE/a) + 2` (`inv` floors the square root, so a deposit that pays for `dx` can mint up to `ONE/a + 1` base units less).
   `deposit_needed = max(ceil((r(x+dx)−r(x)+1)*10000/(10000−fee_bps)) + journal_fee + reg, min_buy + journal_fee + reg)`, where `reg = reg_min if unregistered else 0`. `fee_on` is computed on the deposit after these deductions. From that deposit, compute the real `minted`, `cost_real = r(x+minted) − r(x)` and the post-buy `t_required`.
-  Fees paid go to the pot and are recaptured in the same batch, so `value = pot − rug_fee − cost_real − journal_fee − reg` (leftover tokens are not valued). `cost = cost_real + journal_fee + reg`, the figure the gauge prints as the rug price. Feasible iff `pot + fee_on(deposit_needed) ≥ pot_min`. `GapBuyView` extends `GapView` with `deposit_needed`, `min_out = minted`, `cost`, and `t_required` (post-buy T). When `bal ≥ T`, the page sends a plain `rug` with no buy.
+  Fees paid go to the pot and are recaptured in the same batch, so `value = pot − rug_fee − cost_real − journal_fee − reg` (leftover tokens are not valued). `cost = cost_real + journal_fee + reg`, the figure the gauge prints as the rug price. Feasible iff `x + dx ≤ X_MAX`, the real `x2 ≤ X_MAX` and `pot + fee + dust ≥ pot_min`; the numbers are still computed when infeasible. `GapBuyView` extends `GapView` with `deposit_needed`, `min_out = minted`, `cost`, and `t_required` (post-buy T). When `bal ≥ T`, the page sends a plain `rug` with no buy.
   **Page rule (audit N1):** `max_burn = ceil(t_required * 1.01)` and the buy deposit is `deposit_needed * 1.01`, so a small organic buy just before does not revert the batch; surplus stays as tokens.
 - **`get_gap_exit(account_id)`** (largest-holder exit; the page feeds it the top holder derived from the journal plus `ft_balance_of`): `W = balance`. Largest sale that still leaves ≥ T:
   `s = min( floor((W*10000 − tau_bps*S)/(10000−tau_bps)), W − ceil(tau_bps*floor(hwm*9000/10000)/10000) )`, feasible iff `s ≥ 0` (signed intermediate; use i256-safe branching) and `W ≥ T` (and `pot ≥ pot_min`). `value = net_sell(s) + fee(s) + pot − rug_fee − net_sell_at_W(W)`, where the first term uses `x` then `x−s`, and `net_sell_at_W` is selling everything W from `x`. journal fees cancel.
@@ -339,7 +339,7 @@ Run `cargo test` in `contracts/anyone-can-rug`.
 - `prop_round_id_never_regresses`.
 - `prop_round_trip_loses_exactly_fees`: buy then immediately sell the same tokens returns deposit − fees − journal fees (± dust).
 - `prop_split_buy_no_advantage`: two buys never mint more than one combined buy minus the extra fee rounding (with fee 0, equal).
-- `prop_no_free_rug`: for any atomic buy/rug/sell sequence by an account holding 0 tokens, net NEAR gain ≤ `max(0, gap_buy_value) + 1 yocto`, ignoring gas.
+- `prop_no_free_rug`: for any atomic buy/rug/sell sequence by an account holding 0 tokens, net NEAR gain ≤ `max(0, gap_buy_value)` + the cost of the `ONE/a + 4` margin + 1 yocto, ignoring gas.
 - `prop_gap_buy_rug_always_succeeds`: after any sequence, `min_out` and `deposit_needed` from `get_gap_buy` make the batch succeed.
 
 **CI lint (`grep_no_admin`):** no admin identifiers, exactly two `#[private]`.
