@@ -14,6 +14,7 @@ test('wall: empty', async ({ page, m }) => {
 });
 
 test('wall: posters, biggest heist first, BOT badge, share', async ({ page, m }) => {
+  m.setPot(NEAR / 5n);
   m.rugBy('bot-3.acr-bots.testnet', NOW - 1000);
   await open(page, '#/wall');
   await expect(page.getByTestId('rug-card')).toHaveCount(4);
@@ -22,9 +23,12 @@ test('wall: posters, biggest heist first, BOT badge, share', async ({ page, m })
   await expect(page.getByTestId('rug-card').filter({ hasText: 'bot-3' }).locator('.badge.bot')).toBeVisible();
   await expectTargets(page);
   await page.waitForTimeout(400);
+  const clipped = await page.locator('.poster-name, .poster-crime').evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth || el.textContent?.includes('…')).map((el) => el.textContent));
+  expect(clipped, 'text cut on a poster').toEqual([]);
   await shot(page, '41-wall');
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByTestId('rug-share').first().click()]);
   expect(download.suggestedFilename()).toMatch(/rugged-round-\d+\.png/);
+  await download.saveAs(join(ROOT, 'test-results', 'shots', '41a-wall-share.png'));
 });
 
 test('journal: filled, audit passes, rows, tx link', async ({ page, m }) => {
@@ -35,6 +39,8 @@ test('journal: filled, audit passes, rows, tx link', async ({ page, m }) => {
   await page.getByTestId('journal-audit').click();
   await expect(page.getByTestId('journal-audit-result')).toHaveText('Journal matches supply: 13 events');
   await expect(page.getByTestId('journal-bot-share')).toContainText('bots share of volume 0.0%');
+  const lines = await page.getByTestId('journal-row').first().locator('.ex-link').evaluate((el) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].map((c) => Math.round(c.top))).size; });
+  expect(lines, 'Find tx on one line').toBe(1);
   await page.waitForTimeout(300);
   await expectTargets(page);
   await shot(page, '42-journal');
@@ -147,6 +153,14 @@ test.describe('static checks on dist', () => {
     expect(offenders).toEqual([]);
   });
 
+  test('no invented simulation numbers: the fixture and the built file are the simulator output', () => {
+    const real = readFileSync(join(ROOT, 'web', 'public', 'sim', 'summary.json'));
+    expect(readFileSync(join(ROOT, 'e2e', 'fixtures', 'sim-summary.json')).equals(real), 'e2e fixture differs from the real summary').toBe(true);
+    expect(readFileSync(join(dist, 'sim', 'summary.json')).equals(real), 'dist summary differs from the real summary').toBe(true);
+    const offenders = walk(dist).filter((p) => /\.(js|html|json)$/.test(p) && /TEST FIXTURE|fabricated numbers/.test(readFileSync(p, 'utf8')));
+    expect(offenders).toEqual([]);
+  });
+
   test('initial bundle stays under 120 KB gzip', () => {
     const indexHtml = readFileSync(join(dist, 'index.html'), 'utf8');
     const entry = /assets\/index-[^"']+\.js/.exec(indexHtml)![0];
@@ -168,12 +182,30 @@ test('forbidden words: none in the rendered copy or the README', async ({ page, 
   for (const text of seen) for (const re of BAD) expect(text, String(re)).not.toMatch(re);
 });
 
-test('sim page reads summary.json', async ({ page, m: _m }) => {
+test('sim page shows the real simulator output', async ({ page, m: _m }) => {
+  const real = JSON.parse(readFileSync(join(ROOT, 'web', 'public', 'sim', 'summary.json'), 'utf8'));
   await open(page, '#/proof/sim');
   await expect(page.getByTestId('sim-assumption-banner')).toContainText('Assumed behaviour. Not a forecast.');
   await expect(page.getByTestId('sim-scenario').first()).toBeVisible();
   await expect(page.getByTestId('sim-supply-chart').first()).toBeVisible();
-  await expect(page.getByTestId('sim-limits')).toBeVisible();
+  await expect(page.getByTestId('sim-limits')).toContainText(`${Math.round(real.limits.no_bot_no_rug_pct)}% of games without an attentive bot`);
+  await expect(page.getByTestId('sim-limits')).toContainText(`${real.limits.whale_w_pct}% holder took ${Math.round(real.limits.whale_rug_share_pct)}% of the rugs`);
+  await expect(page.getByTestId('sim-scenario')).toHaveCount(Object.keys(real.scenarios).length);
   await page.waitForTimeout(400);
+  const body = await page.evaluate(() => document.body.innerText);
+  expect(body).not.toMatch(/NaN|undefined|…/);
+  for (const id of Object.keys(real.scenarios)) await expect(page.locator(`[data-scenario="${id}"] h3`)).not.toHaveText(id);
+  const band = await page.locator('.sim-band-bar').evaluate((el) => { const f = el.querySelector('.sim-band-fill')!.getBoundingClientRect(); const b = el.getBoundingClientRect(); return f.left >= b.left && f.right <= b.right; });
+  expect(band, 'viable zone stays inside its bar').toBe(true);
   await shot(page, '53-sim');
+  await shot(page, '53a-sim-full', { fullPage: true });
+});
+
+test('disclosure carries the real limits, with no placeholder', async ({ page, m: _m }) => {
+  const real = JSON.parse(readFileSync(join(ROOT, 'web', 'public', 'sim', 'summary.json'), 'utf8'));
+  await open(page, '#/proof/rules');
+  const long = page.getByTestId('disclosure-long');
+  await expect(long).toContainText(`a ${real.limits.whale_w_pct}% holder took ${Math.round(real.limits.whale_rug_share_pct)}% of the rugs`);
+  await expect(long).toContainText(`about ${Math.round(real.limits.no_bot_no_rug_pct)}% of simulated games`);
+  await expect(long).not.toContainText('…');
 });

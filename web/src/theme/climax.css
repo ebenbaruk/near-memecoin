@@ -16,8 +16,8 @@
 .climax-floor-img { display: none; }
 .climax-pile { position: absolute; left: 50%; bottom: 8%; width: 84%; transform: translateX(-50%); }
 .climax-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.climax-count { position: absolute; top: 22%; left: 0; right: 0; display: grid; justify-items: center; gap: 2px; font-family: var(--font-display); opacity: 0; transition: opacity 0.2s; }
-.climax[data-phase='3'] .climax-count { opacity: 1; }
+.climax-count { position: absolute; top: 22%; left: 0; right: 0; display: grid; justify-items: center; gap: 2px; font-family: var(--font-display); opacity: 0; }
+.climax[data-phase='3'] .climax-count { opacity: 1; transition: opacity 0.2s; }
 .climax-pot { font-size: 30px; }
 .climax-plus { font-size: 52px; }
 .climax-bag { position: absolute; left: 50%; top: 58%; width: 120px; opacity: 0; }
@@ -37,7 +37,10 @@
 .climax[data-reduced] .climax-count, .climax[data-reduced] .climax-bag { display: none; }
 @keyframes slam { from { transform: scale(2.6) rotate(-14deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-.climax-winner { font-family: var(--font-display); font-size: 25px; line-height: 1.05; text-align: center; padding: 0 16px; overflow-wrap: anywhere; }
+/* An opaque band: the coins keep falling behind it and can never cross the words. */
+.climax-winner { position: relative; max-width: calc(100vw - 32px); margin-top: 10px; padding: 8px 14px; background: var(--cream); color: var(--brown); border: 3px solid var(--brown); box-shadow: 0 3px 0 var(--ink); font-family: var(--font-display); font-size: 22px; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+/* The stamp's ink is rust, like the floor: it needs its own paper to show. */
+.climax-rugged { box-sizing: content-box; width: 132px; margin-top: 6px; padding: 4px 8px; background: var(--cream); border: 3px solid var(--brown); transform: rotate(-6deg); }
 .climax-hash { font-family: var(--font-mono); font-size: 13px; }
 .climax-actions { position: absolute; z-index: 3; left: 16px; right: 16px; bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .climax-skip { position: absolute; z-index: 3; top: 8px; right: 8px; min-width: 56px; min-height: 44px; padding: 0 12px; background: var(--ink); color: var(--cream); font-family: var(--font-mono); font-size: 14px; }
@@ -45,16 +48,16 @@
 .unroll-cover::after { content: ''; position: absolute; top: 0; right: -60px; width: 100vh; height: 60px; background: url('/art/anim/fringe-wave.webp') repeat-x left / auto 60px; transform: rotate(90deg); transform-origin: top left; }
 @keyframes unroll { from { transform: translateX(0); } to { transform: translateX(-112%); } }
 
-/* The wanted poster, on the wall and in the climax. The template has a photo window and two text bars. */
+/* The wanted poster, on the wall and in the climax. The template has a photo window and two text bars.
+   Nothing sits on the frame or the face: round and BOT are a mugshot placard under the portrait. */
 .poster { position: relative; width: 100%; aspect-ratio: 1080 / 1350; color: var(--brown); container-type: inline-size; }
-.poster.big { width: min(280px, 72vw); }
+.poster.big { width: min(280px, 72vw); background: var(--ink); box-shadow: 0 0 0 5px var(--ink); }
 .poster-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.mugshot { position: absolute; left: 22.7%; top: 24.3%; width: 54.6%; height: 37.4%; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
-.mugshot img { height: 100%; width: auto; max-width: none; }
-.poster-ruggedstamp { position: absolute; left: 60%; top: 1%; width: 38cqw; transform: rotate(12deg); }
-.stamp-round { position: absolute; left: 47%; top: 50%; padding: 1cqw 2cqw; border: 1.1cqw solid var(--rust); color: var(--rust); background: var(--cream); font-family: var(--font-mono); font-weight: 500; font-size: 7.5cqw; transform: rotate(-12deg); white-space: nowrap; }
-.poster-botstamp { position: absolute; left: 24%; top: 26%; width: 28cqw; transform: rotate(-8deg); }
+.mugshot { position: absolute; left: 22.7%; top: 24.3%; width: 54.6%; height: 37.4%; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; }
+.mugshot img { height: 78%; width: auto; max-width: none; }
+.stamp-round { position: absolute; left: 22.7%; top: 53.5%; width: 54.6%; height: 8.2%; display: flex; align-items: center; justify-content: center; gap: 2cqw; box-sizing: border-box; border: 0.8cqw solid var(--rust); background: var(--cream); color: var(--brown); font-family: var(--font-mono); font-weight: 500; font-size: 5.4cqw; line-height: 1; white-space: nowrap; }
+.poster-botstamp { height: 86%; width: auto; }
 .poster-name, .poster-crime { position: absolute; left: 17%; width: 66%; display: flex; align-items: center; justify-content: center; margin: 0; white-space: nowrap; overflow: hidden; }
-.poster-name { top: 65%; height: 6.4%; font-family: var(--font-mono); font-size: 5.4cqw; }
-.poster.big .poster-name { font-size: 4.4cqw; }
-.poster-crime { top: 72.9%; height: 6.4%; font-family: var(--font-display); font-size: 7.4cqw; }
+.poster-name { top: 65%; height: 6.4%; font-family: var(--font-mono); font-size: min(5.4cqw, calc(96cqw / var(--chars, 20))); }
+.poster.big .poster-name { font-size: min(4.6cqw, calc(96cqw / var(--chars, 20))); }
+.poster-crime { top: 72.9%; height: 6.4%; font-family: var(--font-display); font-size: min(5.8cqw, calc(100cqw / var(--chars, 16))); }

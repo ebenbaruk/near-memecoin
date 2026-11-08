@@ -82,7 +82,7 @@ export function ProofRules() {
         <h2>Code hash</h2>
         <dl className="receipt-list">
           <dt>On chain</dt><dd className="break" data-testid="code-hash-live">{liveHash ?? '…'}</dd>
-          <dt>Published in the repo</dt><dd className="break" data-testid="code-hash-published">{published || 'not available'}</dd>
+          <dt>In the repo</dt><dd className="break" data-testid="code-hash-published">{published || 'not available'}</dd>
         </dl>
         {liveHash ? <p className={match ? 'ok' : 'notice danger'}>{match ? 'They match.' : 'They differ: this instance was deployed from a different wasm.'}</p> : null}
         <pre className="cli">cargo near build non-reproducible-wasm && sha256sum res/anyone_can_rug.wasm</pre>

@@ -163,7 +163,7 @@ export async function installChain(page: Page, m: MockChain) {
   await page.route('https://test.rpc.fastnear.com/**', rpc);
   await page.route('https://rpc.testnet.near.org/**', rpc);
   await page.route('https://archival-rpc.testnet.fastnear.com/**', rpc);
-  // A stable summary for screenshots and copy checks; the real file replaces it in production.
+  // A byte-for-byte copy of web/public/sim/summary.json (enforced in pages.spec), so tests see the real numbers.
   await page.route('**/sim/summary.json', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: readFileSync(join(FIX, '..', 'sim-summary.json')) }));
   await page.route('https://tx.test.fastnear.com/**', (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ account_txs: [{ transaction_hash: 'MockResolved11111111111111111111111111111111', tx_block_height: 276800000, is_signer: true }] }) }),

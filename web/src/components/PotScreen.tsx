@@ -27,7 +27,7 @@ function LastEvent() {
           <b className={`kind-${e.kind}`}>{KIND[e.kind]}</b> {shortAccount(e.account, 20)} <BotBadge account={e.account} />
           <span className="le-amount">{fmtNear(B(e.near))} NEAR</span> <span className="le-age">{ago(e.ts_ms, now)}</span>
         </>
-      ) : 'No mints or burns yet.'}
+      ) : state && i < 0 ? 'No mints or burns yet.' : null}
     </div>
   );
 }

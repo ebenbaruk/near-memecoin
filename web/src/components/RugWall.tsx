@@ -1,5 +1,5 @@
 import type { RugRecord } from '../chain/types';
-import { B, dateLabel, duration, fmtNear, fmtTokens, shortAccount } from '../format/near';
+import { B, dateLabel, duration, fmtNear, fmtTokens } from '../format/near';
 import { useChain } from '../hooks/context';
 import { Art, BotBadge, ExplorerLink, StateView } from './common';
 import { ShareButton } from './ShareButton';
@@ -11,7 +11,7 @@ function RugCard({ rug, prevTs, featured }: { rug: RugRecord; prevTs: number | n
       <WantedPoster rug={rug} />
       <div className="rug-card-text">
         <p className="rug-card-line">
-          <b title={rug.rugger}>{shortAccount(rug.rugger, 26)}</b> <BotBadge account={rug.rugger} /> took <b>{fmtNear(B(rug.pot_before))} NEAR</b> by burning <b>{fmtTokens(B(rug.burned))}</b>
+          <b className="rug-card-name">{rug.rugger}</b> <BotBadge account={rug.rugger} /> took <b>{fmtNear(B(rug.payout))} NEAR</b> by burning <b>{fmtTokens(B(rug.burned))}</b>
         </p>
         <p className="mono small">Round {rug.round_id} · {dateLabel(rug.ts_ms)}{prevTs !== null ? ` · lasted ${duration(rug.ts_ms - prevTs)}` : ''}</p>
         <div className="rug-card-actions">

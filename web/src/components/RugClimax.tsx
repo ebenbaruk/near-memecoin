@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { explorerTx } from '../chain/journal';
 import type { RugRecord } from '../chain/types';
-import { B, fmtNear, shortAccount } from '../format/near';
+import { B, fmtNear } from '../format/near';
 import { useReducedMotion } from '../hooks/context';
 import { Art } from './common';
 import { ShareButton } from './ShareButton';
@@ -60,8 +60,9 @@ export function RugClimax({ rug, you, hash, onPhase, onClose }: { rug: RugRecord
       <div className="climax-poster" data-testid="rug-climax-poster">
         <WantedPoster rug={rug} big testId="rug-climax-wanted" />
         <p className="climax-winner" data-testid="rug-climax-winner">
-          {you ? 'YOU RUGGED IT' : `${shortAccount(rug.rugger, 28)} STOLE ${fmtNear(B(rug.payout))} NEAR`}
+          {you ? 'YOU RUGGED IT' : `${rug.rugger} STOLE ${fmtNear(B(rug.payout))} NEAR`}
         </p>
+        <Art name="stamps/rugged.webp" className="climax-rugged" alt="" eager />
         {you && hash ? <a className="climax-hash" href={explorerTx(hash)} target="_blank" rel="noreferrer">{hash.slice(0, 16)}… ↗</a> : null}
       </div>
 

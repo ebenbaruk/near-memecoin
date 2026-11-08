@@ -23,7 +23,8 @@ function JournalRow({ entry, index, now }: { entry: JournalEntry | undefined; in
       <span className={`j-kind kind-${entry.kind}`}>{LABEL[entry.kind]}</span>
       <div className="j-main">
         <p><span className="mono">#{index}</span> <span title={entry.account}>{shortAccount(entry.account, 20)}</span> <BotBadge account={entry.account} /></p>
-        <p className="mono small">{fmtTokens(B(entry.tokens))} · {fmtNear(B(entry.near))} NEAR · S {fmtTokens(B(entry.supply_after))} · {ago(entry.ts_ms, now)}</p>
+        <p className="mono small">{fmtTokens(B(entry.tokens))} tokens · {fmtNear(B(entry.near))} NEAR</p>
+        <p className="mono small">Supply {fmtTokens(B(entry.supply_after))} · {ago(entry.ts_ms, now)}</p>
       </div>
       <ExplorerLink entry={entry} block={entry.block} />
     </div>

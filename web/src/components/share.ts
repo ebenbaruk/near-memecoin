@@ -7,6 +7,19 @@ import { mugshotBackdrop, mugshotSrc } from './Mugshot';
 const PHOTO = { left: 0.227, top: 0.243, width: 0.546, height: 0.374 };
 const NAME_Y = 0.682;
 const CRIME_Y = 0.761;
+// Same layout as the on-page poster: the portrait stands on a placard, nothing covers the face or the frame.
+const PORTRAIT = 0.78;
+const BAR_W = 0.62;
+
+/** Picks the largest font up to `start` that keeps the text inside the bar. */
+function fitFont(g: CanvasRenderingContext2D, text: string, font: (px: number) => string, start: number) {
+  let px = start;
+  g.font = font(px);
+  while (px > 18 && g.measureText(text).width > BAR_W * 1080) {
+    px -= 2;
+    g.font = font(px);
+  }
+}
 
 function loadImage(src: string): Promise<HTMLImageElement | null> {
   if (!src) return Promise.resolve(null);
@@ -45,42 +58,53 @@ export async function posterPng(rug: RugRecord, contractId: string): Promise<Blo
   g.fillStyle = mugshotBackdrop(rug.rugger);
   g.fillRect(px, py, pw, ph);
   const mug = await loadImage(await mugshotSrc(rug.rugger));
+  const portraitH = ph * PORTRAIT;
   if (mug) {
-    const side = Math.min(pw, ph);
-    g.drawImage(mug, px + (pw - side) / 2, py + ph - side, side, side);
+    const w = (portraitH * mug.naturalWidth) / mug.naturalHeight;
+    g.drawImage(mug, px + (pw - w) / 2, py, w, portraitH);
   }
+
+  const placardY = py + portraitH;
+  const placardH = ph - portraitH;
+  g.fillStyle = '#F6EFDC';
+  g.fillRect(px, placardY, pw, placardH);
+  g.strokeStyle = rust;
+  g.lineWidth = 9;
+  g.strokeRect(px + 4.5, placardY + 4.5, pw - 9, placardH - 9);
 
   g.textAlign = 'center';
   g.textBaseline = 'middle';
   g.fillStyle = brown;
-  g.font = '500 54px "DM Mono"';
-  g.fillText(shortAccount(rug.rugger, 28), W / 2, NAME_Y * H);
-  g.font = '62px "Bagel Fat One"';
-  g.fillText(`STOLE ${fmtNear(B(rug.payout))} NEAR`, W / 2, CRIME_Y * H);
-
-  g.save();
-  g.translate(px + pw - 200, py + 90);
-  g.rotate(-0.25);
-  g.strokeStyle = rust;
-  g.lineWidth = 9;
-  g.strokeRect(-150, -46, 300, 92);
-  g.fillStyle = rust;
-  g.font = '500 54px "DM Mono"';
-  g.fillText(`ROUND ${rug.round_id}`, 0, 2);
-  g.restore();
+  const name = shortAccount(rug.rugger, 44);
+  fitFont(g, name, (s) => `500 ${s}px "DM Mono"`, 50);
+  g.fillText(name, W / 2, NAME_Y * H);
+  const crime = `STOLE ${fmtNear(B(rug.payout))} NEAR`;
+  fitFont(g, crime, (s) => `${s}px "Bagel Fat One"`, 56);
+  g.fillText(crime, W / 2, CRIME_Y * H);
 
   const bot = rug.rugger.endsWith('.acr-bots.testnet') ? await loadImage(artUrl('stamps/bot.webp') ?? '') : null;
+  const cy = placardY + placardH / 2;
+  const cx = px + pw / 2;
+  g.font = '500 50px "DM Mono"';
   if (bot) {
-    g.save();
-    g.translate(px + 150, py + 140);
-    g.rotate(0.18);
-    g.drawImage(bot, -130, -80, 260, 160);
-    g.restore();
+    const h = placardH - 26;
+    const w = (h * bot.naturalWidth) / bot.naturalHeight;
+    const label = `ROUND ${rug.round_id}`;
+    const textW = g.measureText(label).width;
+    const gap = 24;
+    const left = cx - (w + gap + textW) / 2;
+    g.drawImage(bot, left, cy - h / 2, w, h);
+    g.fillText(label, left + w + gap + textW / 2, cy + 2);
+  } else {
+    g.fillText(`ROUND ${rug.round_id}`, cx, cy + 2);
   }
 
-  g.fillStyle = brown;
+  // Over the fringe the credit is unreadable, so it gets its own strip.
+  g.fillStyle = '#14160D';
+  g.fillRect(0, H - 56, W, 56);
+  g.fillStyle = '#F6EFDC';
   g.font = '500 28px "DM Mono"';
-  g.fillText(`Anyone Can Rug · NEAR testnet · ${shortAccount(contractId, 26)}`, W / 2, 0.94 * H);
+  g.fillText(`Anyone Can Rug · NEAR testnet · ${shortAccount(contractId, 26)}`, W / 2, H - 27);
 
   return new Promise((resolve, reject) => c.toBlob((b) => (b ? resolve(b) : reject(new Error('png'))), 'image/png'));
 }

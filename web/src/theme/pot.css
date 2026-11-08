@@ -9,7 +9,7 @@
 .headline h1 { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 0.98; letter-spacing: -0.01em; white-space: nowrap; }
 .headline h1 span { display: block; }
 .headline-pot { color: var(--mustard); }
-[data-zone='warm'] .headline-pot { color: var(--rust); }
+[data-zone='warm'] .headline-pot { color: var(--brown); }
 [data-zone='live'] .headline-pot { color: var(--brown); }
 .headline p { font-size: 14px; font-weight: 600; margin-top: 1px; line-height: 18px; }
 
@@ -19,8 +19,8 @@
 .rs-tag { pointer-events: none; }
 .rs-tag img { width: 100%; height: auto; }
 .tag-value { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-mono); color: var(--brown); }
-.tag-value > span { font-size: 28px; font-weight: 500; line-height: 1.02; }
-.tag-value small { font-size: 12px; font-weight: 500; line-height: 1.1; }
+.tag-value > span { font-size: 26px; font-weight: 500; line-height: 1; }
+.tag-value small { font-size: 12px; font-weight: 500; line-height: 1.1; margin-bottom: 5px; }
 
 .nails { position: absolute; inset: 14px; pointer-events: none; }
 .nails i { position: absolute; width: 14px; height: 14px; background: var(--sage); border: 3px solid var(--brown); border-radius: 50%; }

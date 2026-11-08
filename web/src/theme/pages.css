@@ -16,6 +16,7 @@
 .rug-card.featured { grid-template-columns: 170px 1fr; align-items: start; }
 .rug-card-text { display: grid; gap: 8px; }
 .rug-card-line { font-size: 15px; overflow-wrap: anywhere; }
+.rug-card-name { overflow-wrap: anywhere; }
 .rug-card-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .rug-card .btn { min-height: 44px; font-size: 16px; padding: 0 12px; }
 
@@ -30,12 +31,12 @@
 .j-scroll { height: calc(100dvh - 400px); min-height: 280px; overflow-y: auto; background: var(--cream); color: var(--brown); border-top: 4px dashed var(--brown); outline-offset: -2px; }
 .j-inner { position: relative; }
 .j-window { position: absolute; left: 0; right: 0; }
-.j-row { display: grid; grid-template-columns: 58px 1fr 44px; gap: 8px; align-items: center; padding: 6px 10px; border-bottom: 1px dashed var(--brown); overflow: hidden; }
+.j-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 6px 10px; border-bottom: 1px dashed var(--brown); overflow: hidden; }
 .j-row.loading { display: flex; font-family: var(--font-mono); font-size: 13px; }
 .j-kind { font-family: var(--font-mono); font-weight: 500; font-size: 12px; padding: 2px 4px; text-align: center; border: 2px solid currentcolor; }
 .j-kind.kind-buy { color: var(--teal); } .j-kind.kind-sell { color: var(--brown); } .j-kind.kind-rug { background: var(--rust); color: var(--brown); border-color: var(--brown); } .j-kind.kind-payout_failed { color: var(--cobalt); }
 .j-main { min-width: 0; }
-.j-main p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.j-main p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; line-height: 1.25; }
 .j-main p.small { font-size: 12px; }
 
 .proof-tabs { display: flex; gap: 6px; padding: 10px 14px 0; background: var(--sage); color: var(--brown); }
@@ -60,7 +61,7 @@
 .sim-banner { padding: 8px 12px; background: var(--ink); color: var(--cream); font-family: var(--font-mono); font-weight: 500; text-align: center; }
 .sim-scenario { display: grid; gap: 4px; padding: 10px; background: var(--cream); border: 3px solid var(--brown); }
 .sim-scenario h3 { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
-.sim-chart { width: 100%; height: auto; }
+.sim-chart { width: 100%; height: auto; touch-action: pan-y; }
 
 .wall { position: relative; }
 .wall-thief { position: absolute; right: 8px; top: 8px; width: 118px; }

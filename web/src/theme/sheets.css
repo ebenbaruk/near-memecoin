@@ -12,6 +12,7 @@
 .pct-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .btn-pct { background: var(--cream); color: var(--brown); font-family: var(--font-mono); font-size: 15px; min-height: 44px; }
 .receipt-list { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 8px 0; border-block: 2px dashed var(--brown); font-family: var(--font-mono); font-size: 14px; }
+.receipt-list dt { white-space: nowrap; }
 .receipt-list dd { text-align: right; font-weight: 500; }
 .receipt-list dd.note { grid-column: 1 / -1; text-align: left; font-family: var(--font-body); font-size: 12px; font-weight: 400; margin-bottom: 6px; }
 .receipt-list.frozen { background: var(--cream); padding: 10px; border: 3px solid var(--brown); }

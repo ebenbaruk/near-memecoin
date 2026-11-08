@@ -14,16 +14,21 @@
   ],
   "scripts": {
     "sim": "npm run --silent -w sim sim --",
+    "test": "npm run -s -w sim test && npm run -s -w bots test && cargo test -p anyone-can-rug",
     "verify": "tsx scripts/verify.ts",
     "verify:chain": "tsx scripts/verify-chain.ts",
     "check:secrets": "tsx scripts/check-secrets.ts",
     "try:testnet": "tsx scripts/try-testnet.ts",
     "web": "npm run -s -w web build && npm run -s -w web preview -- --port 5180",
+    "bots": "tsx bots/src/run.ts",
     "e2e": "playwright test",
-    "shots": "playwright test && mkdir -p docs-assets/shots && cp test-results/shots/*.png docs-assets/shots/"
+    "e2e:prod": "playwright test -c e2e-prod/playwright.config.ts",
+    "shots": "playwright test && mkdir -p docs-assets/shots && cp test-results/shots/*.png docs-assets/shots/",
+    "snapshot": "tsx scripts/snapshot.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.65.0",
+    "@types/node": "24.19.2",
     "dotenv": "^18.0.9",
     "near-api-js": "^7.4.0",
     "tsx": "^4.23.15",
