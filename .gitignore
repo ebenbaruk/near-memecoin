@@ -4,3 +4,4 @@
 node_modules/
 var/
 target/
+.claude/settings.local.json
