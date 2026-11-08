@@ -1,6 +1,6 @@
 # Avancement
 
-**Phase actuelle : 3, le build.** Contrat, simulateur, page, visuels, bots, README et scripts livrés ; paramètres figés. Reste : audit, déploiement final, hébergement, bots actifs, vidéo, accords humains.
+**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Reste : recharge faucet, bots actifs 24 h et plus, instance `film` et vidéo, accords humains.
 
 ## Par où commencer
 1. Lire `Docs/spec/10-spec.md`, puis la partie concernée de `Docs/spec/`.
@@ -19,8 +19,8 @@
 Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
 
 ## Points d'attention
-- Budget opérateur : 13,3 NEAR le 2026-11-08 au soir (23 NEAR perdus sur des comptes jetables d'une répétition qui a planté, script corrigé) ; `rc1.acr-ops.testnet` contient encore environ 15 NEAR, récupérables en le supprimant une fois `rugfast` déployé. Il faut plus pour les bots et le tournage : refinancer au faucet une fois le délai passé (429 reçu vers 17:35 le 8 nov, retry 8 h).
-- Railway : `railway login` nécessaire (seul l'humain peut le faire), voir `HUMAN-TODO.md`.
+- Budget opérateur : 13,4 NEAR le 2026-11-08 au soir (23 NEAR perdus sur des comptes jetables d'une répétition qui a planté, script corrigé). Il faut plus pour les bots et le tournage : refinancer au faucet une fois le délai passé (429 reçu vers 17:35 le 8 nov, retry 8 h, relance programmée à 01:45 le 9).
+- Railway : projet `anyone-can-rug`, service `web`, `BOTS_ENABLED=0` tant que les bots ne sont pas créés. Déployer avec `railway up --service web` depuis un clone propre (jamais depuis le dossier de travail).
 - **Faucet limité par IP** : `helper.nearprotocol.com` a répondu `429 Rate limit exceeded, retry in 8 hours` après une dizaine de créations. L'opérateur `acr-ops.testnet` a environ 54 NEAR (cible 150). Ne pas relancer `scripts/fund-operator.sh` avant le délai. Impact sur `Try it, no wallet` et `try:testnet` : le flux doit tenir le 429 proprement, et les juges auront leur propre IP.
 
 ## Bloqué
