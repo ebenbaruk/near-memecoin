@@ -17,7 +17,10 @@
     "verify": "tsx scripts/verify.ts",
     "verify:chain": "tsx scripts/verify-chain.ts",
     "check:secrets": "tsx scripts/check-secrets.ts",
-    "try:testnet": "tsx scripts/try-testnet.ts"
+    "try:testnet": "tsx scripts/try-testnet.ts",
+    "web": "npm run -s -w web build && npm run -s -w web preview -- --port 5180",
+    "e2e": "playwright test",
+    "shots": "playwright test && mkdir -p docs-assets/shots && cp test-results/shots/*.png docs-assets/shots/"
   },
   "devDependencies": {
     "@playwright/test": "1.65.0",

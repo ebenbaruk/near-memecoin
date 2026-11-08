@@ -1,0 +1,18 @@
+{
+  "default": "fast",
+  "botSuffix": ".acr-bots.testnet",
+  "instances": {
+    "fast": {
+      "contractId": "rc1.acr-ops.testnet",
+      "label": "FAST DEMO INSTANCE",
+      "tagline": "tuned to rug often",
+      "bots": "Demo bots buy, sell and rug through the public methods only."
+    },
+    "live": {
+      "contractId": "anyonecanrug.testnet",
+      "label": "LIVE",
+      "tagline": "simulated parameters",
+      "bots": "Moderate demo bots, public methods only."
+    }
+  }
+}

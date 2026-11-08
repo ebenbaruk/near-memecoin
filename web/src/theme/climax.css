@@ -1,0 +1,60 @@
+/* The climax rips the actual page away. See 41 §6 for the timeline. */
+.app[data-climax] { z-index: 60; height: 100dvh; overflow: hidden; }
+.app[data-climax='0'] *, .app[data-climax='0']::before { animation-play-state: paused !important; }
+.app[data-climax='1'] { animation: rip 0.42s cubic-bezier(0.6, 0.02, 0.9, 0.4) forwards; transform-origin: 100% 100%; }
+.app[data-climax='1']::after { content: ''; position: fixed; top: -8px; bottom: -8px; left: -46px; width: 64px; background: url('/art/anim/fringe-wave.webp') repeat-x center / auto 64px; transform-origin: 100% 50%; animation: whip 0.42s ease-in; }
+.app[data-climax='2'], .app[data-climax='3'], .app[data-climax='4'], .app[data-climax='5'] { display: none; }
+@keyframes rip {
+  0% { transform: none; }
+  25% { transform: scale(1.02) skewY(-2deg) rotate(0.5deg); }
+  100% { transform: translate(112%, -46%) rotate(22deg) skewX(-14deg); }
+}
+@keyframes whip { from { transform: scaleX(0.3) skewY(0); } 60% { transform: scaleX(1.6) skewY(10deg); } to { transform: scaleX(1) skewY(-12deg); } }
+
+.climax { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; background: var(--rust); overflow: hidden; color: var(--brown); }
+.climax-floor { position: absolute; inset: 0; background: var(--rust) var(--weave); }
+.climax-floor-img { display: none; }
+.climax-pile { position: absolute; left: 50%; bottom: 8%; width: 84%; transform: translateX(-50%); }
+.climax-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.climax-count { position: absolute; top: 22%; left: 0; right: 0; display: grid; justify-items: center; gap: 2px; font-family: var(--font-display); opacity: 0; transition: opacity 0.2s; }
+.climax[data-phase='3'] .climax-count { opacity: 1; }
+.climax-pot { font-size: 30px; }
+.climax-plus { font-size: 52px; }
+.climax-bag { position: absolute; left: 50%; top: 58%; width: 120px; opacity: 0; }
+.climax-mascot { position: absolute; z-index: 1; left: 2%; bottom: 8%; width: 42%; opacity: 0; }
+.climax[data-phase='2'] .climax-mascot, .climax[data-phase='3'] .climax-mascot { animation: mascot-fall 1.6s cubic-bezier(0.3, 0.1, 0.5, 1) forwards; }
+@keyframes mascot-fall { 0% { transform: translate(-160px, -140px) rotate(-40deg); opacity: 1; } 60% { transform: translate(40px, 16px) rotate(6deg); opacity: 1; } 100% { transform: translate(40px, 16px) rotate(-3deg); opacity: 1; } }
+.climax-hand { position: absolute; z-index: 1; right: -120%; top: 13%; width: 200%; max-width: none; opacity: 0; }
+.climax[data-phase='1'] .climax-hand { opacity: 1; animation: hand-yank 0.42s cubic-bezier(0.7, 0, 1, 0.5) forwards; }
+@keyframes hand-yank { from { transform: translateX(-52%); } to { transform: translateX(90%); } }
+.climax[data-phase='3'] .climax-bag { animation: bag-fly 1s cubic-bezier(0.3, 0, 0.5, 1) forwards; }
+@keyframes bag-fly { 0% { transform: translate(-50%, 0) scale(1); opacity: 1; } 100% { transform: translate(-50%, -360px) scale(0.5) rotate(20deg); opacity: 0; } }
+
+.climax-poster { position: relative; z-index: 2; margin-top: 46px; display: grid; justify-items: center; gap: 6px; opacity: 0; }
+.climax[data-phase='4'] .climax-poster { animation: slam 0.28s cubic-bezier(0.2, 1.4, 0.4, 1) forwards; }
+.climax[data-phase='5'] .climax-poster { opacity: 1; }
+.climax[data-reduced] .climax-poster { opacity: 1; animation: fade 0.5s; }
+.climax[data-reduced] .climax-count, .climax[data-reduced] .climax-bag { display: none; }
+@keyframes slam { from { transform: scale(2.6) rotate(-14deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.climax-winner { font-family: var(--font-display); font-size: 25px; line-height: 1.05; text-align: center; padding: 0 16px; overflow-wrap: anywhere; }
+.climax-hash { font-family: var(--font-mono); font-size: 13px; }
+.climax-actions { position: absolute; z-index: 3; left: 16px; right: 16px; bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.climax-skip { position: absolute; z-index: 3; top: 8px; right: 8px; min-width: 56px; min-height: 44px; padding: 0 12px; background: var(--ink); color: var(--cream); font-family: var(--font-mono); font-size: 14px; }
+.unroll-cover { position: fixed; inset: 0; z-index: 70; background: var(--rust) url('/art/scene/rug-live.webp') center / cover; pointer-events: none; animation: unroll 1.15s cubic-bezier(0.5, 0, 0.3, 1) forwards; }
+.unroll-cover::after { content: ''; position: absolute; top: 0; right: -60px; width: 100vh; height: 60px; background: url('/art/anim/fringe-wave.webp') repeat-x left / auto 60px; transform: rotate(90deg); transform-origin: top left; }
+@keyframes unroll { from { transform: translateX(0); } to { transform: translateX(-112%); } }
+
+/* The wanted poster, on the wall and in the climax. The template has a photo window and two text bars. */
+.poster { position: relative; width: 100%; aspect-ratio: 1080 / 1350; color: var(--brown); container-type: inline-size; }
+.poster.big { width: min(280px, 72vw); }
+.poster-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mugshot { position: absolute; left: 22.7%; top: 24.3%; width: 54.6%; height: 37.4%; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
+.mugshot img { height: 100%; width: auto; max-width: none; }
+.poster-ruggedstamp { position: absolute; left: 60%; top: 1%; width: 38cqw; transform: rotate(12deg); }
+.stamp-round { position: absolute; left: 47%; top: 50%; padding: 1cqw 2cqw; border: 1.1cqw solid var(--rust); color: var(--rust); background: var(--cream); font-family: var(--font-mono); font-weight: 500; font-size: 7.5cqw; transform: rotate(-12deg); white-space: nowrap; }
+.poster-botstamp { position: absolute; left: 24%; top: 26%; width: 28cqw; transform: rotate(-8deg); }
+.poster-name, .poster-crime { position: absolute; left: 17%; width: 66%; display: flex; align-items: center; justify-content: center; margin: 0; white-space: nowrap; overflow: hidden; }
+.poster-name { top: 65%; height: 6.4%; font-family: var(--font-mono); font-size: 5.4cqw; }
+.poster.big .poster-name { font-size: 4.4cqw; }
+.poster-crime { top: 72.9%; height: 6.4%; font-family: var(--font-display); font-size: 7.4cqw; }

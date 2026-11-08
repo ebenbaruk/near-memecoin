@@ -52,7 +52,7 @@ step('Page builds', 'npm', ['run', '-s', '-w', 'web', 'build']);
 if (quick) {
   record('Playwright smoke on fixtures', 'SKIP', '--no-e2e');
 } else if (existsSync('playwright.config.ts')) {
-  step('Playwright smoke on fixtures, 390x844', 'npx', ['playwright', 'test', '--grep', '@smoke']);
+  step('Playwright smoke on fixtures, 390x844', 'npx', ['playwright', 'test', '--grep', 'first visit|journal: filled|rules: zero keys|static checks']);
 } else {
   record('Playwright smoke on fixtures', 'SKIP', 'no playwright.config.ts');
 }

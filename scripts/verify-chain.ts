@@ -78,9 +78,8 @@ function sorted(o: Record<string, unknown>) {
 }
 
 export function instanceList(): { key: string; contract: string; init: string }[] {
-  const raw = JSON.parse(readFileSync('web/public/instances.json', 'utf8'));
-  const list: any[] = Array.isArray(raw) ? raw : (raw.instances ?? Object.entries(raw).map(([key, v]: any) => ({ key, ...v })));
-  return list.map((i) => ({ key: i.key ?? i.id ?? i.name, contract: i.contract ?? i.contractId ?? i.account, init: `deploy/${i.key ?? i.id ?? i.name}.json` }));
+  const { instances } = JSON.parse(readFileSync('web/public/instances.json', 'utf8')) as { instances: Record<string, { contractId: string }> };
+  return Object.entries(instances).map(([key, v]) => ({ key, contract: v.contractId, init: `deploy/${key}.json` }));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

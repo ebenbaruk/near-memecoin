@@ -1,0 +1,42 @@
+/* The nine colours of 41 §2 are the only ones allowed. Everything else is derived by opacity. */
+:root {
+  --ink: #14160d;
+  --brown: #3a1d0e;
+  --cream: #f6efdc;
+  --mustard: #f2c230;
+  --rust: #f0562b;
+  --pink: #f59ac4;
+  --teal: #0f7b6c;
+  --sage: #dde3b5;
+  --cobalt: #2457a6;
+
+  --font-display: 'Bagel Fat One', 'Arial Black', sans-serif;
+  --font-body: 'Instrument Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', 'SFMono-Regular', Menlo, monospace;
+
+  --banner-h: 32px;
+  --marquee-h: 24px;
+  --title-h: 92px;
+  --event-h: 24px;
+  --action-h: 64px;
+  --nav-h: 56px;
+  --dock-h: calc(var(--action-h) + var(--nav-h));
+  --safe-b: env(safe-area-inset-bottom, 0px);
+
+  --weave: repeating-linear-gradient(90deg, rgb(20 22 13 / 0.08) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(0deg, rgb(20 22 13 / 0.08) 0 2px, transparent 2px 5px);
+  --bg: var(--ink);
+  --fg: var(--cream);
+  --accent: var(--teal);
+}
+
+[data-zone='locked'] { --bg: var(--ink); --fg: var(--cream); --accent: var(--sage); }
+[data-zone='cold'] { --bg: var(--ink); --fg: var(--cream); --accent: var(--teal); }
+[data-zone='warm'] { --bg: var(--mustard); --fg: var(--brown); --accent: var(--rust); }
+[data-zone='live'] { --bg: var(--rust); --fg: var(--ink); --accent: var(--pink); }
+
+@property --lift {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
