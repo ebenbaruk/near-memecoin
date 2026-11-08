@@ -16,3 +16,4 @@
 |---|---|---|
 | 2026-11-08 | 2e projet du propriétaire pour le NEAR HACKATHON, catégorie `memecoins` ; indépendant de TokenGo, les deux README se citent | Règle Q-015 ; catégorie peu disputée (11 projets sur 286, dont 2 seulement uniquement dans cette catégorie) |
 | 2026-11-08 | Testnet uniquement ; aucun lancement mainnet (meme.cooking) sans accord explicite | Règle Q-010 ; argent réel |
+| 2026-11-08 | Projet retenu : **Anyone Can Rug** (repli : IZNOP) ; After You écarté faute de « waouh » | Premier chez le degen et la salle du hackathon, sans précédent exact trouvé ; zone de paramètres viable en simulation. Décidé par Claude sur délégation |

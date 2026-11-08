@@ -77,4 +77,4 @@ Chaque piste suit le même format : la règle, ce qui la rend drôle, et le risq
 - Quelles autres catégories cocher, honnêtement ? Peut-être `social`. Rester sobre : les autres participants en cochent 6 à 8, ce qui fait opportuniste.
 
 ## Décision
-_(à remplir : piste retenue, nom, une phrase de pitch, pourquoi)_
+**Retenu (2026-11-08) : ANYONE CAN RUG**, décidé par Claude sur délégation du propriétaire. « Every coin has a rug price. This one prints it. » Détail, avis et simulation : `05-brainstorm-wow.md`. Ticker à vérifier dans la spec ($RUG et $COPE sont encombrés). Solution de repli : IZNOP.

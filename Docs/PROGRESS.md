@@ -1,6 +1,6 @@
 # Avancement
 
-**Phase actuelle : 1, le brainstorm** (avec l'humain).
+**Phase actuelle : 2, la spec** (brainstorm terminé : Anyone Can Rug, voir `05-brainstorm-wow.md`). En attente des captures d'inspiration de l'humain.
 
 ## Fait
 - 2026-11-08 :
