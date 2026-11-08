@@ -1,6 +1,6 @@
 # NEAR HACKATHON : recherche pour le 2e projet (catégorie Memecoins)
 
-Recherche du 2026-11-08. Les sources brutes téléchargées sont dans `research/sources/`.
+Recherche du 2026-11-08. Les sources brutes téléchargées sont dans `Docs/sources/`.
 
 ## 1. Calendrier (UTC)
 
@@ -94,11 +94,11 @@ Posts de démo des deux concurrents « purs » :
 
 ## 6. Ressources techniques
 
-- Standard NEP-141 (token fongible) : `sources/nep-0141-fungible-token.md`
-- Compétence agent `near-smart-contracts` : `sources/skill-near-smart-contracts.md`. Pour tout installer : `npx skills add near/agent-skills`.
+- Standard NEP-141 (token fongible) : `Docs/sources/nep-0141-fungible-token.md`
+- Compétence agent `near-smart-contracts` : `Docs/sources/skill-near-smart-contracts.md`. Pour tout installer : `npx skills add near/agent-skills`.
 - Docs pour les IA : https://docs.near.org/llms.txt
-- Consignes officielles pour les agents : `sources/HACKATHON.md`. **À relire en version en ligne avant de soumettre.**
-- Prompt d'installation et liste de vérification avant soumission : `sources/prompt-examples-00-setup.md`, `sources/prompt-examples-SUBMITTING.md`.
+- Consignes officielles pour les agents : `Docs/sources/HACKATHON.md`. **À relire en version en ligne avant de soumettre.**
+- Prompt d'installation et liste de vérification avant soumission : `Docs/sources/prompt-examples-00-setup.md`, `Docs/sources/prompt-examples-SUBMITTING.md`.
 - On sait déjà faire, grâce à TokenGo :
   - contrat Rust sur testnet, compte opérateur, recharge par faucet ;
   - simulateur d'économie ;
