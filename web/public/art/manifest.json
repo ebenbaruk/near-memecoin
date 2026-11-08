@@ -1,0 +1,944 @@
+{
+ "version": 1,
+ "basePath": "art/",
+ "palette": {
+  "ink": "#14160D",
+  "brown": "#3A1D0E",
+  "cream": "#F6EFDC",
+  "mustard": "#F2C230",
+  "rust": "#F0562B",
+  "pink": "#F59AC4",
+  "teal": "#0F7B6C",
+  "sage": "#DDE3B5",
+  "cobalt": "#2457A6"
+ },
+ "scene": {
+  "size": {
+   "cssWidth": 390,
+   "cssHeight": 316,
+   "note": "Every position is a percentage of the scene box, which must keep the 390/316 ratio. Assets are supplied at 3x."
+  },
+  "driver": {
+   "variable": "--lift",
+   "range": [
+    0,
+    1
+   ],
+   "meaning": "The Gap drives --lift. L = lift \u00d7 scene height is the distance the corner has travelled. Only animate --lift: everything else derives from it."
+  },
+  "layers": [
+   {
+    "order": 1,
+    "class": "rs-floor",
+    "src": "scene/floor.webp"
+   },
+   {
+    "order": 2,
+    "class": "rs-pile",
+    "src": "scene/pile-{tier}.webp",
+    "note": "tier 1..4, width percent from scene.pileTiers"
+   },
+   {
+    "order": 3,
+    "class": "rs-rugw",
+    "wrapper": true,
+    "child": "scene/rug-{zone}.webp",
+    "note": "Wrapper holds the drop-shadow; the img holds the clip-path. Keep them separate or the shadow is clipped."
+   },
+   {
+    "order": 4,
+    "class": "rs-flapw",
+    "wrapper": true,
+    "child": "scene/flap.webp",
+    "note": "Hide (or leave clipped to nothing) when lift is 0."
+   },
+   {
+    "order": 5,
+    "class": "rs-mascot",
+    "src": "mascot/{expression}.webp"
+   },
+   {
+    "order": 6,
+    "class": "rs-hand",
+    "src": "scene/hand.webp",
+    "note": "Hide when zone is locked."
+   },
+   {
+    "order": 7,
+    "class": "rs-tag",
+    "src": "scene/tag.webp"
+   }
+  ],
+  "css": ".rug-scene{position:relative;aspect-ratio:390/316;overflow:hidden;--lift:0}\n.rug-scene>*{position:absolute}\n.rug-scene img{display:block;max-width:none}\n.rs-floor{inset:0;width:100%;height:100%}\n.rs-pile{right:3%;bottom:3%;height:auto}\n.rs-rugw{inset:0;filter:drop-shadow(-3px 3px 0 rgba(20,22,13,.6))}\n.rs-rugw img{position:absolute;inset:0;width:100%;height:100%;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--lift)*100%),calc(100% - var(--lift)*81.0256%) 100%,0 100%)}\n.rs-flapw{left:calc(100% - var(--lift)*81.0256%);top:calc(100% - var(--lift)*100% - 12.6582%);width:81.0256%;height:112.6582%;filter:drop-shadow(-4px 5px 0 rgba(20,22,13,.55))}\n.rs-flapw img{width:100%;height:100%;clip-path:polygon(0 11.236%,calc(var(--lift)*100%) 11.236%,0 calc(11.236% + var(--lift)*88.764%))}\n.rs-hand{left:calc(100% - var(--lift)*81.0256% - 3.5897%);top:calc(100% - var(--lift)*100% - 15.1899%);height:30.3797%;width:auto}\n.rs-tag{left:44%;top:0;width:46.1538%;height:auto}\n.rs-mascot{left:5%;bottom:3%;height:47.5%;width:auto}\n",
+  "pileTiers": {
+   "1": {
+    "widthPercent": 24
+   },
+   "2": {
+    "widthPercent": 36
+   },
+   "3": {
+    "widthPercent": 50
+   },
+   "4": {
+    "widthPercent": 66
+   }
+  },
+  "tagValueBox": {
+   "note": "Where to put live HTML, in percent of the tag image",
+   "left": 14,
+   "top": 62,
+   "width": 72,
+   "height": 28
+  },
+  "zones": {
+   "locked": {
+    "rug": "scene/rug-locked.webp",
+    "lift": 0,
+    "mascot": "sleep",
+    "hand": false
+   },
+   "cold": {
+    "rug": "scene/rug-cold.webp",
+    "lift": 0.04,
+    "mascot": "one-eye",
+    "hand": true
+   },
+   "warm": {
+    "rug": "scene/rug-warm.webp",
+    "liftRange": [
+     0.1,
+     0.55
+    ],
+    "mascot": "sweat",
+    "hand": true,
+    "note": "Map Gap -25% .. 0 linearly onto liftRange."
+   },
+   "live": {
+    "rug": "scene/rug-live.webp",
+    "lift": 0.92,
+    "mascot": "panic",
+    "hand": true
+   }
+  },
+  "climax": {
+   "note": "Animate --lift from its current value to 1 in about 0.4 s, then fade the rug and flap to leave floor and pile; swap the mascot to ripped."
+  }
+ },
+ "mascot": {
+  "expressions": {
+   "sleep": "mascot/sleep.webp",
+   "oneEye": "mascot/one-eye.webp",
+   "curious": "mascot/curious.webp",
+   "sweat": "mascot/sweat.webp",
+   "panic": "mascot/panic.webp",
+   "scream": "mascot/scream.webp",
+   "ripped": "mascot/ripped.webp",
+   "ghost": "mascot/ghost.webp",
+   "happy": "mascot/happy.webp"
+  },
+  "layers": {
+   "base": "mascot/layers/body.webp",
+   "note": "Stack on the body image. left/top are the centre of the layer, widthPercent is relative to the body image width.",
+   "parts": {
+    "eyes": {
+     "src": "mascot/layers/eyes.webp",
+     "left": 50,
+     "top": 30,
+     "widthPercent": 42
+    },
+    "pupilLeft": {
+     "src": "mascot/layers/pupil.webp",
+     "left": 41,
+     "top": 31,
+     "widthPercent": 10
+    },
+    "pupilRight": {
+     "src": "mascot/layers/pupil.webp",
+     "left": 59,
+     "top": 31,
+     "widthPercent": 10
+    },
+    "lid": {
+     "src": "mascot/layers/lid.webp",
+     "left": 50,
+     "top": 24,
+     "widthPercent": 42
+    },
+    "mouth": {
+     "src": "mascot/layers/mouth-smile.webp",
+     "left": 50,
+     "top": 47,
+     "widthPercent": 30
+    },
+    "sweat": {
+     "src": "mascot/layers/sweat.webp",
+     "left": 78,
+     "top": 14,
+     "widthPercent": 12
+    }
+   },
+   "mouths": [
+    "mouth-smile",
+    "mouth-flat",
+    "mouth-o",
+    "mouth-teeth",
+    "mouth-scream",
+    "mouth-wobble"
+   ]
+  }
+ },
+ "wanted": {
+  "posterBlank": "wanted/poster-blank.webp",
+  "canvas": {
+   "width": 1080,
+   "height": 1350,
+   "note": "Draw the portrait and text on top of the poster at this size for the share PNG."
+  },
+  "portraitBoxPercent": {
+   "left": 22.7,
+   "top": 24.3,
+   "width": 54.6,
+   "height": 37.4
+  },
+  "textBandsPercent": [
+   {
+    "name": "line1",
+    "left": 17,
+    "top": 65,
+    "width": 66,
+    "height": 6.4
+   },
+   {
+    "name": "line2",
+    "left": 17,
+    "top": 72.9,
+    "width": 66,
+    "height": 6.4
+   }
+  ],
+  "ribbon": "wanted/ribbon-biggest-heist.webp",
+  "wall": "wanted/wall.webp",
+  "tornPaper": "wanted/torn-paper.webp"
+ },
+ "thieves": {
+  "mugshots": [
+   "thieves/mug-01.webp",
+   "thieves/mug-02.webp",
+   "thieves/mug-03.webp",
+   "thieves/mug-04.webp",
+   "thieves/mug-05.webp",
+   "thieves/mug-06.webp",
+   "thieves/mug-07.webp",
+   "thieves/mug-08.webp",
+   "thieves/mug-09.webp",
+   "thieves/mug-10.webp",
+   "thieves/mug-11.webp",
+   "thieves/mug-12.webp"
+  ],
+  "selection": "Pick with a deterministic hash of the account id, modulo 12.",
+  "recolors": {
+   "note": "Optional colourways for canvas: for each pixel find the nearest palette colour, then swap per the table. Choose with a second hash modulo the list length.",
+   "tables": [
+    {},
+    {
+     "rust": "teal",
+     "teal": "rust"
+    },
+    {
+     "mustard": "pink",
+     "pink": "mustard"
+    },
+    {
+     "rust": "cobalt",
+     "cobalt": "rust",
+     "mustard": "sage"
+    }
+   ]
+  },
+  "silhouette": "thieves/silhouette-sack.webp"
+ },
+ "stamps": {
+  "rugged": "stamps/rugged.webp",
+  "noAdmin": "stamps/no-admin.webp",
+  "sold": "stamps/sold.webp",
+  "zeroKeys": "stamps/zero-keys.webp",
+  "bot": "stamps/bot.webp"
+ },
+ "brand": {
+  "wordmark": "brand/wordmark.webp",
+  "wordmarkSmall": "brand/wordmark-small.webp",
+  "token": "brand/token-512.webp",
+  "outsideArt": {
+   "favicon": "../favicon.png",
+   "faviconIco": "../favicon.ico",
+   "og": "../og.png",
+   "videoThumbnail": "docs-assets/video/thumbnail.png (repository root)"
+  }
+ },
+ "screens": {
+  "log": "screens/log.webp",
+  "rules": "screens/rules.webp",
+  "sim": "screens/sim.webp",
+  "verify": "screens/verify.webp"
+ },
+ "states": {
+  "emptyWall": "states/empty-wall.webp",
+  "emptyLog": "states/empty-log.webp",
+  "emptyRound": "states/empty-round.webp",
+  "raceLost": "states/race-lost.webp",
+  "rpcDown": "states/rpc-down.webp",
+  "botsAsleep": "states/bots-asleep.webp"
+ },
+ "stickers": [
+  "stickers/flower-eye.webp",
+  "stickers/flower-eye-teal.webp",
+  "stickers/sack.webp",
+  "stickers/star.webp",
+  "stickers/burst.webp",
+  "stickers/key-crossed.webp",
+  "stickers/candle.webp",
+  "stickers/shoes.webp",
+  "stickers/tassel.webp"
+ ],
+ "decor": {
+  "fringeStrip": "decor/fringe-strip.webp",
+  "zigzagStrip": "decor/zigzag-strip.webp",
+  "checkerPatch": "decor/checker-patch.webp",
+  "medallion": "decor/medallion.webp",
+  "stringCoil": "decor/string-coil.webp",
+  "dust": "decor/dust.webp",
+  "grainTile": {
+   "src": "decor/grain-tile.webp",
+   "use": "background-image, repeat, over any flat area; ink specks with alpha."
+  }
+ },
+ "animations": {
+  "mascotBreathe": {
+   "src": "anim/mascot-breathe.webp",
+   "use": "Loading state, loops; 8 frames."
+  },
+  "fringeWave": {
+   "src": "anim/fringe-wave.webp",
+   "use": "Decorative strip, loops; 8 frames."
+  }
+ },
+ "assets": [
+  {
+   "path": "anim/fringe-wave.webp",
+   "width": 540,
+   "height": 104,
+   "bytes": 78358,
+   "role": "Looping animated WebP."
+  },
+  {
+   "path": "anim/mascot-breathe.webp",
+   "width": 260,
+   "height": 246,
+   "bytes": 114700,
+   "role": "Looping animated WebP."
+  },
+  {
+   "path": "brand/token-512.webp",
+   "width": 508,
+   "height": 512,
+   "bytes": 44024,
+   "role": "Token icon, transparent."
+  },
+  {
+   "path": "brand/wordmark-small.webp",
+   "width": 640,
+   "height": 415,
+   "bytes": 45406,
+   "role": "ANYONE CAN RUG wordmark, transparent."
+  },
+  {
+   "path": "brand/wordmark.webp",
+   "width": 1400,
+   "height": 909,
+   "bytes": 160450,
+   "role": "ANYONE CAN RUG wordmark, transparent."
+  },
+  {
+   "path": "decor/checker-patch.webp",
+   "width": 720,
+   "height": 694,
+   "bytes": 49582,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "decor/dust.webp",
+   "width": 720,
+   "height": 479,
+   "bytes": 42390,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "decor/fringe-strip.webp",
+   "width": 720,
+   "height": 220,
+   "bytes": 26296,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "decor/grain-tile.webp",
+   "width": 256,
+   "height": 256,
+   "bytes": 11900,
+   "role": "Tileable grain overlay."
+  },
+  {
+   "path": "decor/medallion.webp",
+   "width": 720,
+   "height": 720,
+   "bytes": 47462,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "decor/string-coil.webp",
+   "width": 720,
+   "height": 649,
+   "bytes": 44502,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "decor/zigzag-strip.webp",
+   "width": 720,
+   "height": 220,
+   "bytes": 34860,
+   "role": "Decorative piece, transparent."
+  },
+  {
+   "path": "mascot/curious.webp",
+   "width": 608,
+   "height": 640,
+   "bytes": 52306,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/ghost.webp",
+   "width": 640,
+   "height": 620,
+   "bytes": 58074,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/happy.webp",
+   "width": 614,
+   "height": 640,
+   "bytes": 48784,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/layers/body.webp",
+   "width": 615,
+   "height": 640,
+   "bytes": 51238,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/brow.webp",
+   "width": 147,
+   "height": 45,
+   "bytes": 1754,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/eye-closed.webp",
+   "width": 165,
+   "height": 74,
+   "bytes": 2524,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/eyes.webp",
+   "width": 260,
+   "height": 161,
+   "bytes": 8640,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/lid.webp",
+   "width": 188,
+   "height": 91,
+   "bytes": 4176,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-flat.webp",
+   "width": 189,
+   "height": 34,
+   "bytes": 1628,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-o.webp",
+   "width": 95,
+   "height": 99,
+   "bytes": 1876,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-scream.webp",
+   "width": 186,
+   "height": 193,
+   "bytes": 7398,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-smile.webp",
+   "width": 213,
+   "height": 134,
+   "bytes": 6238,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-teeth.webp",
+   "width": 214,
+   "height": 99,
+   "bytes": 5126,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/mouth-wobble.webp",
+   "width": 188,
+   "height": 56,
+   "bytes": 2674,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/pupil.webp",
+   "width": 146,
+   "height": 152,
+   "bytes": 4210,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/layers/sweat.webp",
+   "width": 104,
+   "height": 149,
+   "bytes": 3568,
+   "role": "Mascot face layer for CSS animation; see mascot.layers."
+  },
+  {
+   "path": "mascot/one-eye.webp",
+   "width": 615,
+   "height": 640,
+   "bytes": 50088,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/panic.webp",
+   "width": 640,
+   "height": 590,
+   "bytes": 59660,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/ripped.webp",
+   "width": 561,
+   "height": 640,
+   "bytes": 51462,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/scream.webp",
+   "width": 595,
+   "height": 640,
+   "bytes": 59972,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/sleep.webp",
+   "width": 640,
+   "height": 580,
+   "bytes": 53912,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "mascot/sweat.webp",
+   "width": 550,
+   "height": 640,
+   "bytes": 47172,
+   "role": "Mascot, full figure, one expression."
+  },
+  {
+   "path": "scene/flap.webp",
+   "width": 948,
+   "height": 1068,
+   "bytes": 243462,
+   "role": "Reverse side of the lifted corner, pinned at the corner point; revealed by clip-path only (see scene.css)."
+  },
+  {
+   "path": "scene/floor.webp",
+   "width": 1170,
+   "height": 948,
+   "bytes": 52378,
+   "role": "Bare floor, opaque. Bottom layer of the rug scene."
+  },
+  {
+   "path": "scene/hand.webp",
+   "width": 1713,
+   "height": 288,
+   "bytes": 69664,
+   "role": "The one giant hand. Moved by translation only. Forearm is extended to the right, keep the image width as is."
+  },
+  {
+   "path": "scene/pile-1.webp",
+   "width": 420,
+   "height": 178,
+   "bytes": 19438,
+   "role": "Heap of coins on the floor, under the rug; pick the tier from the pot."
+  },
+  {
+   "path": "scene/pile-2.webp",
+   "width": 560,
+   "height": 235,
+   "bytes": 30802,
+   "role": "Heap of coins on the floor, under the rug; pick the tier from the pot."
+  },
+  {
+   "path": "scene/pile-3.webp",
+   "width": 760,
+   "height": 372,
+   "bytes": 56856,
+   "role": "Heap of coins on the floor, under the rug; pick the tier from the pot."
+  },
+  {
+   "path": "scene/pile-4.webp",
+   "width": 900,
+   "height": 435,
+   "bytes": 73272,
+   "role": "Heap of coins on the floor, under the rug; pick the tier from the pot."
+  },
+  {
+   "path": "scene/rug-cold.webp",
+   "width": 1170,
+   "height": 948,
+   "bytes": 248364,
+   "role": "Master rug, one colourway per zone (see scene.zones). Transparent between fringe tassels."
+  },
+  {
+   "path": "scene/rug-live.webp",
+   "width": 1170,
+   "height": 948,
+   "bytes": 258064,
+   "role": "Master rug, one colourway per zone (see scene.zones). Transparent between fringe tassels."
+  },
+  {
+   "path": "scene/rug-locked.webp",
+   "width": 1170,
+   "height": 948,
+   "bytes": 223010,
+   "role": "Master rug, one colourway per zone (see scene.zones). Transparent between fringe tassels."
+  },
+  {
+   "path": "scene/rug-warm.webp",
+   "width": 1170,
+   "height": 948,
+   "bytes": 257770,
+   "role": "Master rug, one colourway per zone (see scene.zones). Transparent between fringe tassels."
+  },
+  {
+   "path": "scene/tag-blank.webp",
+   "width": 540,
+   "height": 340,
+   "bytes": 14438,
+   "role": "Merchant tag on string, no text."
+  },
+  {
+   "path": "scene/tag.webp",
+   "width": 540,
+   "height": 340,
+   "bytes": 16498,
+   "role": "Merchant tag on string with RUG PRICE printed; put the live value in HTML in the empty area (see scene.tagValueBox)."
+  },
+  {
+   "path": "screens/log.webp",
+   "width": 900,
+   "height": 663,
+   "bytes": 95188,
+   "role": "Page header illustration, transparent."
+  },
+  {
+   "path": "screens/rules.webp",
+   "width": 900,
+   "height": 587,
+   "bytes": 112614,
+   "role": "Page header illustration, transparent."
+  },
+  {
+   "path": "screens/sim.webp",
+   "width": 900,
+   "height": 565,
+   "bytes": 106024,
+   "role": "Page header illustration, transparent."
+  },
+  {
+   "path": "screens/verify.webp",
+   "width": 900,
+   "height": 752,
+   "bytes": 112232,
+   "role": "Page header illustration, transparent."
+  },
+  {
+   "path": "stamps/bot.webp",
+   "width": 540,
+   "height": 330,
+   "bytes": 29104,
+   "role": "Rubber stamp, transparent, single colour."
+  },
+  {
+   "path": "stamps/no-admin.webp",
+   "width": 540,
+   "height": 192,
+   "bytes": 17076,
+   "role": "Rubber stamp, transparent, single colour."
+  },
+  {
+   "path": "stamps/rugged.webp",
+   "width": 540,
+   "height": 228,
+   "bytes": 20426,
+   "role": "Rubber stamp, transparent, single colour."
+  },
+  {
+   "path": "stamps/sold.webp",
+   "width": 540,
+   "height": 299,
+   "bytes": 20552,
+   "role": "Rubber stamp, transparent, single colour."
+  },
+  {
+   "path": "stamps/zero-keys.webp",
+   "width": 540,
+   "height": 171,
+   "bytes": 15128,
+   "role": "Rubber stamp, transparent, single colour."
+  },
+  {
+   "path": "states/bots-asleep.webp",
+   "width": 900,
+   "height": 523,
+   "bytes": 96968,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "states/empty-log.webp",
+   "width": 900,
+   "height": 749,
+   "bytes": 98628,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "states/empty-round.webp",
+   "width": 900,
+   "height": 832,
+   "bytes": 111740,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "states/empty-wall.webp",
+   "width": 900,
+   "height": 674,
+   "bytes": 93650,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "states/race-lost.webp",
+   "width": 899,
+   "height": 664,
+   "bytes": 95514,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "states/rpc-down.webp",
+   "width": 793,
+   "height": 900,
+   "bytes": 104314,
+   "role": "Empty or error state illustration, transparent."
+  },
+  {
+   "path": "stickers/burst.webp",
+   "width": 360,
+   "height": 301,
+   "bytes": 18548,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/candle.webp",
+   "width": 360,
+   "height": 349,
+   "bytes": 20010,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/flower-eye-teal.webp",
+   "width": 359,
+   "height": 326,
+   "bytes": 34424,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/flower-eye.webp",
+   "width": 359,
+   "height": 343,
+   "bytes": 21796,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/key-crossed.webp",
+   "width": 360,
+   "height": 315,
+   "bytes": 20950,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/sack.webp",
+   "width": 355,
+   "height": 360,
+   "bytes": 23028,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/shoes.webp",
+   "width": 360,
+   "height": 180,
+   "bytes": 16550,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/star.webp",
+   "width": 360,
+   "height": 330,
+   "bytes": 22942,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "stickers/tassel.webp",
+   "width": 270,
+   "height": 359,
+   "bytes": 18584,
+   "role": "Sticker, transparent."
+  },
+  {
+   "path": "thieves/mug-01.webp",
+   "width": 511,
+   "height": 479,
+   "bytes": 40250,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-02.webp",
+   "width": 373,
+   "height": 512,
+   "bytes": 37126,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-03.webp",
+   "width": 476,
+   "height": 511,
+   "bytes": 34848,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-04.webp",
+   "width": 512,
+   "height": 507,
+   "bytes": 43914,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-05.webp",
+   "width": 512,
+   "height": 490,
+   "bytes": 36282,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-06.webp",
+   "width": 321,
+   "height": 512,
+   "bytes": 32646,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-07.webp",
+   "width": 512,
+   "height": 503,
+   "bytes": 37978,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-08.webp",
+   "width": 512,
+   "height": 455,
+   "bytes": 35920,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-09.webp",
+   "width": 444,
+   "height": 512,
+   "bytes": 37012,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-10.webp",
+   "width": 493,
+   "height": 512,
+   "bytes": 44672,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-11.webp",
+   "width": 336,
+   "height": 512,
+   "bytes": 38850,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/mug-12.webp",
+   "width": 485,
+   "height": 512,
+   "bytes": 37216,
+   "role": "Masked thief mugshot for the wanted poster, transparent background."
+  },
+  {
+   "path": "thieves/silhouette-sack.webp",
+   "width": 760,
+   "height": 696,
+   "bytes": 56734,
+   "role": "Thief running with a sack, transparent background."
+  },
+  {
+   "path": "wanted/poster-blank.webp",
+   "width": 1080,
+   "height": 1350,
+   "bytes": 230808,
+   "role": "Blank wanted poster, opaque, 4:5. See wanted.portraitBoxPercent and wanted.textBandsPercent."
+  },
+  {
+   "path": "wanted/ribbon-biggest-heist.webp",
+   "width": 900,
+   "height": 244,
+   "bytes": 52180,
+   "role": "Ribbon BIGGEST HEIST for the largest rug on the wall."
+  },
+  {
+   "path": "wanted/torn-paper.webp",
+   "width": 900,
+   "height": 532,
+   "bytes": 62682,
+   "role": "Torn paper scrap, transparent."
+  },
+  {
+   "path": "wanted/wall.webp",
+   "width": 780,
+   "height": 1385,
+   "bytes": 18340,
+   "role": "Brick wall, opaque background of the Rug Wall."
+  }
+ ]
+}
