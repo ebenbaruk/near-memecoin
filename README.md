@@ -6,7 +6,7 @@ A NEP-141 memecoin on NEAR testnet where the rug is a public, priced, permission
 
 | | |
 |---|---|
-| Live demo | TBD_DEMO_URL |
+| Live demo | https://web-production-69c90.up.railway.app |
 | Contract (simulated parameters) | [`anyonecanrug.testnet`](https://testnet.nearblocks.io/address/anyonecanrug.testnet) |
 | Contract (fast demo instance, tuned to rug often) | [`rugfast.acr-ops.testnet`](https://testnet.nearblocks.io/address/rugfast.acr-ops.testnet) |
 | Video | TBD_VIDEO |
@@ -53,7 +53,7 @@ Each step is "do X, see Y". None needs a secret or a wallet.
 
 ## Contract
 
-Rust, `near-sdk` 5.30.1, 18 decimals. Source: `contracts/anyone-can-rug/`. Committed wasm: `contracts/anyone-can-rug/res/anyone_can_rug.wasm`, base58 sha256 `TBD_CODE_HASH`.
+Rust, `near-sdk` 5.30.1, 18 decimals. Source: `contracts/anyone-can-rug/`. Committed wasm: `contracts/anyone-can-rug/res/anyone_can_rug.wasm`, base58 sha256 `24xdnXK4NTyHrj7S82Bv1EzkNZBBguGy8qCAugor2s9m`.
 
 | Method | Effect |
 |---|---|
@@ -73,8 +73,8 @@ Rust, `near-sdk` 5.30.1, 18 decimals. Source: `contracts/anyone-can-rug/`. Commi
 
 | Step | `anyonecanrug.testnet` | `rugfast.acr-ops.testnet` |
 |---|---|---|
-| Deploy + init, one transaction | TBD_TX | TBD_TX |
-| Key deletion | TBD_TX | TBD_TX |
+| Deploy + init, one transaction | [`DfCp5P3S…`](https://testnet.nearblocks.io/txns/DfCp5P3SsivRPvDmmB2V5PnGYMxMp4jcwxaUz3DxJdkA) | [`E7hkM1C2…`](https://testnet.nearblocks.io/txns/E7hkM1C2eWpDUA4b4Up67LgJdFuragqJHbBmQYQPnPDw) |
+| Key deletion | [`45F2veW8…`](https://testnet.nearblocks.io/txns/45F2veW87pLfT4GPxRhUQUrResnpqPixbGo8qjj1TZWa) | [`7hfDsLZo…`](https://testnet.nearblocks.io/txns/7hfDsLZo4MLeDTjpoHf84fzb2hzTwMum3MmrDeN2imwB) |
 
 ## Simulation: 60 days, before parameters were chosen
 These results come from **modelled agents whose behaviour we assumed**. Nothing is fitted to real trading data.
