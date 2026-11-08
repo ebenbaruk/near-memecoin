@@ -72,8 +72,17 @@ function check(name: string, ok: boolean, detail = '') {
 }
 
 const NEAR = 10n ** 24n;
-const alice = await burner('a', 9n * NEAR);
-const bob = await burner('b', 5n * NEAR);
+const burners: Account[] = [];
+// Whatever happens below, throwaway accounts give their NEAR back to the operator.
+async function refundAll() {
+  for (const a of burners.splice(0)) await refund(a).catch((e) => console.log(`refund ${a.accountId}: ${e}`));
+}
+process.on('uncaughtException', (e) => { console.error(e); void refundAll().finally(() => process.exit(2)); });
+process.on('unhandledRejection', (e) => { console.error(e); void refundAll().finally(() => process.exit(2)); });
+const before0 = await view('get_state').catch((e) => { throw new Error(`contract not readable, nothing was funded: ${e}`); });
+void before0;
+const alice = await burner('a', 4n * NEAR); burners.push(alice);
+const bob = await burner('b', 2n * NEAR); burners.push(bob);
 console.log(`accounts: ${alice.accountId}, ${bob.accountId}`);
 
 const before = await view('get_state');
@@ -83,7 +92,12 @@ let tx = await send(alice, [fc('buy', { min_out: '0' }, 3n * NEAR)]);
 check('buy succeeds', tx.failure === '""', `tx ${tx.hash}, ${tx.gasT} Tgas`);
 check('buy emits NEP-141 ft_mint', tx.logs.some((l) => l.includes('"event":"ft_mint"') && l.includes('"memo":"buy"')));
 check('buy emits anyone_can_rug event', tx.logs.some((l) => l.includes('"standard":"anyone_can_rug"') && l.includes('"event":"buy"')));
-const balance = BigInt(await view<string>('ft_balance_of', { account_id: alice.accountId }));
+// The RPC is load-balanced: a read right after a transaction can hit a replica that is behind.
+let balance = 0n;
+for (let i = 0; i < 12 && balance === 0n; i++) {
+  if (i) await new Promise((r) => setTimeout(r, 1000));
+  balance = BigInt(await view<string>('ft_balance_of', { account_id: alice.accountId }));
+}
 check('tokens minted', balance > 0n, balance.toString());
 
 // Slippage is refused and refunds.
@@ -187,7 +201,6 @@ check('journal replays to pot', pot.toString() === final.pot);
 check('params unchanged', JSON.stringify(await view('get_params')) === JSON.stringify(params));
 console.log(before.journal_len === undefined ? '' : `journal grew from ${before.journal_len} to ${final.journal_len}`);
 
-await refund(alice).catch((e) => console.log(`refund: ${e}`));
-await refund(bob).catch((e) => console.log(`refund: ${e}`));
+await refundAll();
 console.log(failed ? `\n${failed} check(s) FAILED` : '\nall checks passed');
 process.exit(failed ? 1 : 0);
