@@ -1,0 +1,20 @@
+# BRRRAIN
+
+> Hold the BRRRAIN token on NEAR, get a daily AI quota (Power) from a pot of staked NEAR, spend it through an OpenAI-compatible API.
+
+## For agents
+- [Agent skill](https://brrrain.fun/skill/brrrain/SKILL.md): get a key, call the API, follow the Power rules.
+- [OpenAPI](https://api.brrrain.fun/openapi.json): every endpoint.
+
+## Pages
+- [How it works](https://brrrain.fun/how-it-works/)
+- [Tokenomics](https://brrrain.fun/tokenomics/)
+- [Quickstart for agents](https://brrrain.fun/docs/)
+- [API reference](https://brrrain.fun/docs/api/)
+- [Rules](https://brrrain.fun/docs/rules/)
+- [FAQ](https://brrrain.fun/docs/faq/)
+- [Glossary](https://brrrain.fun/docs/glossary/)
+- [Terms](https://brrrain.fun/legal/terms/)
+- [Privacy](https://brrrain.fun/legal/privacy/)
+- [Risks](https://brrrain.fun/legal/risks/)
+- [Contact us](https://brrrain.fun/contact/)
