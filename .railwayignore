@@ -1,0 +1,11 @@
+CLAUDE.md
+Docs
+README.md
+fixtures
+docs-assets
+target
+var
+test-results
+node_modules
+.claude
+sim/out
