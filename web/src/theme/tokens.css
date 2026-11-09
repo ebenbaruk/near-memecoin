@@ -25,9 +25,19 @@
 
   --weave: repeating-linear-gradient(90deg, rgb(20 22 13 / 0.08) 0 2px, transparent 2px 5px),
     repeating-linear-gradient(0deg, rgb(20 22 13 / 0.08) 0 2px, transparent 2px 5px);
+  --weave-soft: repeating-linear-gradient(90deg, rgb(20 22 13 / 0.032) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(0deg, rgb(20 22 13 / 0.032) 0 2px, transparent 2px 5px);
   --bg: var(--ink);
   --fg: var(--cream);
   --accent: var(--teal);
+}
+
+/* Dense screens resolve the weave into a visible gingham behind small text: half as strong there. */
+@media (min-resolution: 2dppx) {
+  :root {
+    --weave-soft: repeating-linear-gradient(90deg, rgb(20 22 13 / 0.016) 0 2px, transparent 2px 5px),
+      repeating-linear-gradient(0deg, rgb(20 22 13 / 0.016) 0 2px, transparent 2px 5px);
+  }
 }
 
 [data-zone='locked'] { --bg: var(--ink); --fg: var(--cream); --accent: var(--sage); }

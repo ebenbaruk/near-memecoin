@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import type { RugRecord, Zone } from '../chain/types';
 import { zoneOf } from '../chain/store';
-import { useAccount, useApp, useChain } from '../hooks/context';
+import { useAccount, useApp, useChain, useDesktop } from '../hooks/context';
 import { useHashRoute } from '../hooks/useHashRoute';
 import { StateView } from './common';
 import type { SheetKind } from './ActionDock';
 import { BottomNav } from './BottomNav';
 import { InstanceBanner } from './InstanceBanner';
+import { TopNav } from './TopNav';
 import { Journal } from './Journal';
 import { PotScreen } from './PotScreen';
 import { ProofRoute } from './Proof';
@@ -14,17 +15,21 @@ import { RaceLost } from './RaceLost';
 import { RugClimax, FINAL_PHASE } from './RugClimax';
 import { RugSheet, type LostInfo } from './RugSheet';
 import { RugWall } from './RugWall';
-import { TradeSheet } from './TradeSheet';
+import { TradeSheet, type Prefill } from './TradeSheet';
 import { dateLabel } from '../format/near';
 
 interface Climax { rug: RugRecord; you: boolean; hash?: string }
 
+const Landing = lazy(() => import('../landing/Landing'));
+
 export function App() {
   const route = useHashRoute();
+  const desktop = useDesktop();
   const { chain, instanceKey, instances } = useApp();
   const snap = useChain();
   const acct = useAccount();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
+  const [prefill, setPrefill] = useState<Prefill | null>(null);
   const [climax, setClimax] = useState<Climax | null>(null);
   const [phase, setPhase] = useState(-1);
   const [unrolling, setUnrolling] = useState(false);
@@ -101,7 +106,19 @@ export function App() {
   const other = Object.keys(instances.instances).find((k) => k !== instanceKey);
   const otherHref = other ? `?i=${other}` : '?';
 
+  const openSheet = useCallback((k: SheetKind, amount?: string) => {
+    setSheet(k);
+    setPrefill((p) => (amount ? { amount, n: (p?.n ?? 0) + 1 } : p));
+  }, []);
+
   const climaxActive = climax !== null;
+  // Desktop: the same forms, inline in the console, with no sheet to open. Phones keep the sheets.
+  const panel: SheetKind = sheet ?? (zone === 'live' ? 'rug' : 'buy');
+  const panelNode = !desktop ? null : snap.status === 'live' ? (
+    panel === 'rug' ? <RugSheet key="rug" inline onClose={() => setSheet(null)} onLost={onLost} onWon={onWon} /> : <TradeSheet key={panel} inline mode={panel} prefill={panel === 'buy' ? prefill : null} onClose={() => setSheet(null)} />
+  ) : (
+    <p className="console-wait">{snap.status === 'frozen' ? "The chain isn't answering. Buy, Sell and Rug come back when it does." : 'Reading the chain…'}</p>
+  );
   return (
     <>
       <div
@@ -109,20 +126,22 @@ export function App() {
         data-zone={zone}
         data-route={route}
         data-climax={climaxActive ? phase : undefined}
-        inert={sheet !== null || lost !== null || (climaxActive && phase >= FINAL_PHASE)}
+        inert={(!desktop && sheet !== null) || lost !== null || (climaxActive && phase >= FINAL_PHASE)}
       >
-        <InstanceBanner />
+        {desktop ? <TopNav route={route} /> : route === 'landing' ? null : <InstanceBanner />}
         {snap.status === 'frozen' && snap.frozen ? (
           <div className="frozen-banner" data-testid="frozen-copy-banner" role="status">
             Chain unreachable. Showing frozen copy from {dateLabel(snap.frozen.date)}, block {snap.frozen.block}.
           </div>
         ) : null}
-        {missing ? (
+        {missing && route !== 'landing' ? (
           <StateView art="mascot/ghost.webp" message="This instance isn't responding.">
             <a className="btn btn-sell" href={otherHref}>Open the other instance</a>
           </StateView>
+        ) : route === 'landing' ? (
+          <Suspense fallback={<div className="l-boot" aria-busy="true">Loading the page…</div>}><Landing /></Suspense>
         ) : route === 'pot' ? (
-          <PotScreen sheetOpen={sheet !== null} onOpen={setSheet} />
+          <PotScreen sheetOpen={sheet !== null} onOpen={openSheet} active={panel} panel={panelNode} />
         ) : route === 'wall' ? (
           <RugWall />
         ) : route === 'log' ? (
@@ -130,10 +149,10 @@ export function App() {
         ) : (
           <ProofRoute route={route} />
         )}
-        <BottomNav route={route} />
+        {desktop ? null : <BottomNav route={route} />}
       </div>
-      {sheet === 'buy' || sheet === 'sell' ? <TradeSheet mode={sheet} onClose={() => setSheet(null)} /> : null}
-      {sheet === 'rug' ? <RugSheet onClose={() => setSheet(null)} onLost={onLost} onWon={onWon} /> : null}
+      {!desktop && (sheet === 'buy' || sheet === 'sell') ? <TradeSheet mode={sheet} prefill={sheet === 'buy' ? prefill : null} onClose={() => setSheet(null)} /> : null}
+      {!desktop && sheet === 'rug' ? <RugSheet onClose={() => setSheet(null)} onLost={onLost} onWon={onWon} /> : null}
       {lost ? <RaceLost round={lost.round} winner={lost.winner} sent={lost.sent} onNext={() => setLost(null)} /> : null}
       <div className="grain" aria-hidden="true" />
       {unrolling ? <div className="unroll-cover" aria-hidden="true" /> : null}

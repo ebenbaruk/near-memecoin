@@ -44,12 +44,17 @@ export function loadSummary(): Promise<SimSummary | null> {
   return summaryPromise;
 }
 
-export function useSummary(): SimSummary | null {
-  const [s, setS] = useState<SimSummary | null>(null);
+/** `failed`: the file did not load, or did not match the simulator's output. */
+export function useSummaryState(): { summary: SimSummary | null; failed: boolean } {
+  const [st, setSt] = useState<{ summary: SimSummary | null; failed: boolean }>({ summary: null, failed: false });
   useEffect(() => {
-    void loadSummary().then(setS);
+    void loadSummary().then((summary) => setSt({ summary, failed: summary === null }));
   }, []);
-  return s;
+  return st;
+}
+
+export function useSummary(): SimSummary | null {
+  return useSummaryState().summary;
 }
 
 export function Disclosure({ long }: { long?: boolean }) {

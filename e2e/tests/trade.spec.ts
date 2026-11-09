@@ -3,7 +3,7 @@ import { NEAR, ONE } from '../lib/mock';
 
 async function burner(page: import('@playwright/test').Page) {
   await page.getByTestId('try-no-wallet').click();
-  await expect(page.getByTestId('burner-status')).toContainText('Burner ready: 10 NEAR');
+  await expect(page.getByTestId('burner-status')).toContainText('Free account ready: 10 test NEAR');
   return (await page.getByTestId('account-id').getAttribute('title'))!;
 }
 

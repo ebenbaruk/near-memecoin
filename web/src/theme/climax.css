@@ -14,6 +14,8 @@
 .climax { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; background: var(--rust); overflow: hidden; color: var(--brown); }
 .climax-floor { position: absolute; inset: 0; background: var(--rust) var(--weave); }
 .climax-floor-img { display: none; }
+.climax-hoard { display: none; }
+.cw-name small { font-size: 0.6em; }
 .climax-pile { position: absolute; left: 50%; bottom: 8%; width: 84%; transform: translateX(-50%); }
 .climax-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .climax-count { position: absolute; top: 22%; left: 0; right: 0; display: grid; justify-items: center; gap: 2px; font-family: var(--font-display); opacity: 0; }
@@ -51,7 +53,7 @@
 /* The wanted poster, on the wall and in the climax. The template has a photo window and two text bars.
    Nothing sits on the frame or the face: round and BOT are a mugshot placard under the portrait. */
 .poster { position: relative; width: 100%; aspect-ratio: 1080 / 1350; color: var(--brown); container-type: inline-size; }
-.poster.big { width: min(280px, 72vw); background: var(--ink); box-shadow: 0 0 0 5px var(--ink); }
+.poster.big { width: min(280px, 72vw); }
 .poster-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mugshot { position: absolute; left: 22.7%; top: 24.3%; width: 54.6%; height: 37.4%; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; }
 .mugshot img { height: 78%; width: auto; max-width: none; }

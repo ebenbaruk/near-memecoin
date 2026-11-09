@@ -58,7 +58,7 @@ function SmallMultiple({ id, data, children }: { id: string; data: ScenarioSerie
         <text x={X(30)} y={H - 4} className="sim-tick" textAnchor="middle">Day 30</text>
         <text x={W - PAD.r} y={H - 4} className="sim-tick" textAnchor="end">Day 60</text>
       </svg>
-      <p className="sim-readout">Day {shown}: median {fmtSupply(data.median[shown])} · p10 {fmtSupply(data.p10[shown])} to p90 {fmtSupply(data.p90[shown])}</p>
+      <p className="sim-readout">Day {shown}: median {fmtSupply(data.median[shown])}, 8 runs in 10 from {fmtSupply(data.p10[shown])} to {fmtSupply(data.p90[shown])}</p>
       {children}
     </article>
   );
@@ -70,7 +70,7 @@ function Band({ s }: { s: SimSummary }) {
   return (
     <section>
       <h2>Viable zone</h2>
-      <p>The rug price over the fee, τ/f. Below the zone the pot goes instantly; above it, nobody ever steals it.</p>
+      <p>The burn share divided by the fee (τ/f). Too low and the pot is taken right away; too high and it is hardly ever taken.</p>
       <div className="sim-band-bar" role="img" aria-label={`Viable tau over f from ${s.band.tau_over_f_low} to ${s.band.tau_over_f_high}; chosen ${s.selected.tau_over_f}`}>
         <div className="sim-band-fill" style={{ left: pct(s.band.tau_over_f_low), width: pct(s.band.tau_over_f_high - s.band.tau_over_f_low) }} />
         <div className="sim-band-mark" style={{ left: pct(s.selected.tau_over_f) }} />
@@ -91,7 +91,7 @@ export function ProofSim() {
     return Object.keys(s.scenarios).sort((a, b) => order.indexOf(a) - order.indexOf(b));
   }, [s]);
   return (
-    <main className="page proof">
+    <main className="page proof proof-sim">
       <h1 className="page-title">Simulation</h1>
       <Art name="screens/sim.webp" className="page-art" eager />
       <p className="sim-banner" data-testid="sim-assumption-banner">Assumed behaviour. Not a forecast.</p>
@@ -108,7 +108,7 @@ export function ProofSim() {
           </section>
           <Band s={s} />
           <section className="sim-legend mono small">
-            <span><i className="k-med" />Median supply</span><span><i className="k-band" />p10 to p90</span><span><i className="k-ctl" />No rug, for comparison</span><span><i className="k-rug" />Rugs</span>
+            <span><i className="k-med" />Median supply</span><span><i className="k-repr" />One sample run</span><span><i className="k-band" />8 runs in 10 fall inside</span><span><i className="k-ctl" />No rug, for comparison</span><span><i className="k-rug" />Rugs</span>
           </section>
           <section className="sim-multiples">
             {ids.map((id) => <SmallMultiple key={id} id={id} data={s.scenarios[id]} />)}
@@ -117,7 +117,7 @@ export function ProofSim() {
             <h2>60 days, every scenario</h2>
             <div className="table-wrap">
               <table className="param-table sim-table">
-                <thead><tr><th>Scenario</th><th>No rug</th><th>Rugs</th><th>Day 10</th><th>Day 30</th><th>Day 60</th><th>Burned</th></tr></thead>
+                <thead><tr><th>Scenario</th><th>No rug</th><th>Median rugs</th><th>Day 10</th><th>Day 30</th><th>Day 60</th><th>Burned</th></tr></thead>
                 <tbody>
                   {ids.map((id) => {
                     const t = s.scenarios[id].table;

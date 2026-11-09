@@ -31,11 +31,12 @@ export function InstanceBanner() {
     <div className="banner" data-testid="instance-banner">
       <p className="banner-text">
         <span data-testid="instance-name">{info.label}</span>
-        {' · '}{info.tagline}{' · '}
+        <span className="banner-tag">{' · '}{info.tagline}</span>{' · '}
         <span data-testid="bots-status">{awake ? 'bots trading' : 'bots asleep'}</span>
       </p>
       <button type="button" className="banner-switch" data-testid="instance-switch" onClick={go} aria-label={`Switch to the ${other} instance`}>
-        <span>{other === 'live' ? 'Live' : 'Fast'}</span>
+        <span className="wide">{other === 'live' ? 'Show the main contract' : 'Show the fast contract'}</span>
+        <span className="narrow">{other === 'live' ? 'Main contract →' : 'Fast contract →'}</span>
       </button>
     </div>
   );

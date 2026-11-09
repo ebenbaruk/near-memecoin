@@ -13,7 +13,7 @@ export function BurnerSetup() {
       {acct.faucetError ? (
         <div className="notice" data-testid="faucet-error" role="status">
           <p><strong>Faucet is busy.</strong>{acct.faucetError.retry ? ` Try again in ${acct.faucetError.retry}.` : ''}</p>
-          <p>Connect a wallet instead, or run <code>npm run try:testnet</code> from the repo. The rest of the page keeps working.</p>
+          <p>Connect a wallet instead. The rest of the page keeps working.</p>
         </div>
       ) : null}
       {acct.walletError ? <p className="notice">{acct.walletError}</p> : null}
@@ -22,27 +22,42 @@ export function BurnerSetup() {
   );
 }
 
-export function AccountSummary() {
+/** Who is playing, on one line. */
+export function AccountLine() {
+  const acct = useAccount();
+  if (!acct.id) return null;
+  return (
+    <p className="account-line mono">
+      <span data-testid="account-id" title={acct.id}>{shortAccount(acct.id, 22)}</span>
+      {' · '}
+      <span data-testid="account-balance">{acct.near === null ? '…' : `${fmtNear(acct.near)} NEAR`} · {fmtTokens(acct.tokens)} tokens</span>
+    </p>
+  );
+}
+
+/** What can be done with the account: kept out of the way on the screen where every pixel is for the rug. */
+export function AccountActions({ status }: { status: string }) {
   const { account } = useApp();
+  const acct = useAccount();
+  if (!acct.id) return null;
+  return acct.kind === 'burner' ? (
+    <>
+      <p className="burner-status" data-testid="burner-status">{status}</p>
+      <p className="fine-print">This is a throwaway testnet key stored in this browser. Don't put anything real here.</p>
+      <button type="button" className="btn btn-ghost" data-testid="burner-forget" onClick={account.forget}>Forget this account</button>
+    </>
+  ) : (
+    <button type="button" className="btn btn-ghost" onClick={() => void account.disconnectWallet()}>Disconnect</button>
+  );
+}
+
+export function AccountSummary() {
   const acct = useAccount();
   if (!acct.id) return null;
   return (
     <div className="account-summary">
-      <p>
-        <span className="mono" data-testid="account-id" title={acct.id}>{shortAccount(acct.id, 30)}</span>
-      </p>
-      <p className="mono" data-testid="account-balance">
-        {acct.near === null ? '…' : `${fmtNear(acct.near)} NEAR`} · {fmtTokens(acct.tokens)} tokens
-      </p>
-      {acct.kind === 'burner' ? (
-        <>
-          <p className="burner-status" data-testid="burner-status">Burner ready: {acct.near === null ? '…' : `${fmtNear(acct.near, 0)} NEAR`}</p>
-          <p className="fine-print">This is a throwaway testnet key stored in this browser. Don't put anything real here.</p>
-          <button type="button" className="btn btn-ghost" data-testid="burner-forget" onClick={account.forget}>Forget burner</button>
-        </>
-      ) : (
-        <button type="button" className="btn btn-ghost" onClick={() => void account.disconnectWallet()}>Disconnect</button>
-      )}
+      <AccountLine />
+      <AccountActions status={`Free account ready: ${acct.near === null ? '…' : `${fmtNear(acct.near, 0)} test NEAR`}`} />
     </div>
   );
 }

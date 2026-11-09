@@ -59,18 +59,19 @@ for (const key of ['fast', 'live'] as const) {
     test('pot and rug price on screen match the chain', async ({ page, request }) => {
       const contract = config.instances[key].contractId;
       const w = watch(page);
-      await page.goto(`/?i=${key}#/`);
+      await page.goto(`/?i=${key}#/play`);
       await expect(page.getByTestId('pot-value')).toBeVisible();
       await expect(page.getByTestId('rug-price-value')).not.toHaveText('…');
       // Bots trade while this runs, so screen and chain are compared until they agree on one read.
       await expect(async () => {
-        const [state, gap] = await Promise.all([
+        const [state, gap, params] = await Promise.all([
           view<{ pot: string; t_required: string }>(request, contract, 'get_state'),
           view<{ cost: string }>(request, contract, 'get_gap_buy', {}),
+          view<{ rug_fee: string }>(request, contract, 'get_params'),
         ]);
         await expect(page.getByTestId('pot-value')).toHaveText(fmtNearFixed(B(state.pot)), { timeout: 1500 });
-        await expect(page.getByTestId('rug-price-value')).toHaveText(fmtNearFixed(B(gap.cost)), { timeout: 1500 });
-        await expect(page.getByTestId('explainer')).toContainText(`Burn ${fmtTokens(B(state.t_required))}`, { timeout: 1500 });
+        await expect(page.getByTestId('rug-price-value')).toHaveText(fmtNearFixed(B(gap.cost) + B(params.rug_fee)), { timeout: 1500 });
+        await expect(page.getByTestId('explainer')).toContainText('destroy ', { timeout: 1500 });
       }).toPass({ timeout: 45000 });
       await expect(page.getByTestId('gap-zone')).toHaveAttribute('data-zone', /^(locked|cold|warm|live)$/);
       w.assertClean();

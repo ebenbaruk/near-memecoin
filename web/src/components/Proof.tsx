@@ -28,11 +28,11 @@ export function ProofTabs({ route }: { route: Route }) {
 const PARAM_ROWS: { key: keyof Params; what: string; show?: (p: Params) => string }[] = [
   { key: 'name', what: 'Token name.' },
   { key: 'symbol', what: 'Ticker.' },
-  { key: 'p0', what: 'Starting price, yocto per whole token.' },
+  { key: 'p0', what: 'Starting price, per whole token.', show: (p) => `${fmtNear(B(p.p0), 6)} NEAR` },
   { key: 'a', what: 'How fast the price climbs per token minted.' },
   { key: 'fee_bps', what: 'Fee on every buy and sell, paid into the pot.', show: (p) => `${p.fee_bps / 100}%` },
   { key: 'tau_bps', what: 'Share of supply you burn to take the pot.', show: (p) => `${p.tau_bps / 100}%` },
-  { key: 'hwm_floor_bps', what: 'The burn never goes below this share of the supply peak.', show: (p) => `${p.hwm_floor_bps / 100}%` },
+  { key: 'hwm_floor_bps', what: 'The coins to burn are never computed on less than this share of the remembered high.', show: (p) => `${p.hwm_floor_bps / 100}%` },
   { key: 'pot_min', what: 'Below this the pot cannot be taken.', show: (p) => `${fmtNear(B(p.pot_min))} NEAR` },
   { key: 'min_buy', what: 'Smallest buy accepted.', show: (p) => `${fmtNear(B(p.min_buy))} NEAR` },
   { key: 'journal_fee', what: 'Pays storage for one journal line.', show: (p) => `${fmtNear(B(p.journal_fee))} NEAR` },
@@ -46,6 +46,21 @@ const METHODS: [string, string][] = [
   ['on_payout, ft_resolve_transfer', 'Only the contract itself'],
   ['get_params, get_state, get_gap_*, get_rugs, get_journal, quote_*', 'Read-only'],
 ];
+
+const accountCurl = (id: string) => `curl -s ${currentRpc()} -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"request_type":"view_account","finality":"final","account_id":"${id}"}}' | jq -r .result.code_hash`;
+
+/** How to compare the two hashes by hand. A recompile is not part of it: the proof is about the binary that was committed. */
+function HashCheck({ id }: { id: string }) {
+  return (
+    <>
+      <p>Check it yourself. Expect <code>code hash equals committed wasm</code>:</p>
+      <pre className="cli" data-testid="hash-cli">npm run verify:chain</pre>
+      <p>Or read the hash on chain directly:</p>
+      <pre className="cli" data-testid="hash-curl">{accountCurl(id)}</pre>
+      <p className="small"><code>contracts/anyone-can-rug/res/anyone_can_rug.wasm.sha256</code> holds the same hash in hex, <code>0fdf55cd…</code>. A rebuild is not expected to match; the proof is about the committed binary.</p>
+    </>
+  );
+}
 
 export function ProofRules() {
   const { chain } = useApp();
@@ -63,7 +78,7 @@ export function ProofRules() {
   const fee = params ? params.fee_bps / 100 : 2;
 
   return (
-    <main className="page proof">
+    <main className="page proof proof-rules">
       <h1 className="page-title">Rules</h1>
       <Art name="screens/rules.webp" className="page-art" eager />
       <section className="proof-keys">
@@ -85,7 +100,7 @@ export function ProofRules() {
           <dt>In the repo</dt><dd className="break" data-testid="code-hash-published">{published || 'not available'}</dd>
         </dl>
         {liveHash ? <p className={match ? 'ok' : 'notice danger'}>{match ? 'They match.' : 'They differ: this instance was deployed from a different wasm.'}</p> : null}
-        <pre className="cli">cargo near build non-reproducible-wasm && sha256sum res/anyone_can_rug.wasm</pre>
+        <HashCheck id={chain.contractId} />
       </section>
       <section>
         <h2>Every parameter</h2>
@@ -96,7 +111,7 @@ export function ProofRules() {
               {params ? PARAM_ROWS.map((r) => (
                 <tr key={r.key} data-testid="param-row" data-param={r.key}>
                   <th scope="row">{r.key}</th>
-                  <td className="mono">{r.show ? r.show(params) : String(params[r.key])}</td>
+                  <td className="mono" title={r.show ? String(params[r.key]) : undefined}>{r.show ? r.show(params) : String(params[r.key])}</td>
                   <td>{r.what}</td>
                   <td><span className="badge immutable">Immutable</span></td>
                 </tr>
@@ -116,7 +131,7 @@ export function ProofRules() {
       </section>
       <section data-testid="sybil-limits">
         <h2>Fake accounts</h2>
-        <p>Splitting across 100 accounts doesn't help: the rug price counts tokens, not accounts. Wash trading pays {fee}% into a pot you may not win. Limits: a whale doesn't need fake accounts, and a bot watching the Gap will usually beat you.</p>
+        <p>Splitting across 100 accounts doesn't help: the coins you must burn are a share of supply, not of accounts. Wash trading pays {fee}% into a pot you may not win. Limits: a whale doesn't need fake accounts, and a bot watching the take will usually beat you.</p>
       </section>
       <Disclosure long />
     </main>
@@ -130,13 +145,18 @@ function VerifyStep({ step }: { step: Step }) {
   const [busy, setBusy] = useState(false);
   return (
     <li className="verify-step" data-testid="verify-step" data-step={step.id}>
-      <h3>{step.id}. {step.title}</h3>
-      <p className="expect">Expect: {step.expect}</p>
-      <pre className="cli" data-testid="verify-cli">{step.cli}</pre>
-      <button type="button" className="btn btn-sell" data-testid="verify-run" disabled={busy} onClick={() => { setBusy(true); step.run().then(setResult, (e: Error) => setResult(`Error: ${e.message}`)).finally(() => setBusy(false)); }}>
-        {busy ? 'Reading…' : 'Run'}
-      </button>
-      {result ? <p className="verify-result" data-testid="verify-result">{result}</p> : null}
+      <span className="vs-n" aria-hidden="true">{step.id}</span>
+      <div className="vs-main">
+        <h3>{step.title}</h3>
+        <p className="expect"><b>Expect:</b> {step.expect}</p>
+        <pre className="cli" data-testid="verify-cli">{step.cli}</pre>
+      </div>
+      <div className="vs-run">
+        <button type="button" className="btn btn-sell" data-testid="verify-run" disabled={busy} onClick={() => { setBusy(true); step.run().then(setResult, (e: Error) => setResult(`Error: ${e.message}`)).finally(() => setBusy(false)); }}>
+          {busy ? 'Reading…' : 'Run'}
+        </button>
+        {result ? <p className="verify-result" data-testid="verify-result">{result}</p> : null}
+      </div>
     </li>
   );
 }
@@ -155,13 +175,13 @@ export function ProofVerify() {
   const curl = `curl -s ${currentRpc()} -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"request_type":"call_function","finality":"optimistic","account_id":"${c}","method_name":"get_state","args_base64":"e30="}}'`;
   const steps: Step[] = [
     {
-      id: 1, title: 'Run the checks', expect: 'tests pass, journal equals supply, 0 access keys, code hash matches.', cli: 'npm run verify',
+      id: 1, title: 'Run the checks', expect: 'tests pass, journal equals supply, 0 access keys, code hash matches.', cli: 'npm ci && npx playwright install chromium && npm run verify',
       run: async () => {
         const [keys, acct, auditText] = await Promise.all([v.accessKeys(c), v.viewAccount(c), auditRun()]);
         return `${keys.length} key${keys.length === 1 ? '' : 's'} · ${acct?.code_hash === __WASM_HASH__ ? 'code hash matches' : 'code hash differs'} · ${auditText}`;
       },
     },
-    { id: 2, title: 'Open #/proof/rules', expect: '0 keys', cli: `curl RPC view_access_key_list ${c}`, run: async () => `${(await v.accessKeys(c)).length} keys` },
+    { id: 2, title: 'Open #/proof/rules', expect: '"keys":[] over RPC, 0 keys on the page.', cli: `curl -s ${currentRpc()} -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"request_type":"view_access_key_list","finality":"final","account_id":"${c}"}}'`, run: async () => `${(await v.accessKeys(c)).length} keys` },
     { id: 3, title: 'Open #/log, press Audit', expect: 'matches supply', cli: 'Log tab, Audit button', run: auditRun },
     {
       id: 4, title: 'Run a real rug yourself', expect: 'a throwaway account buys, sells, then buys and rugs the fast instance, and prints the hashes.', cli: 'npm run try:testnet',
@@ -175,10 +195,14 @@ export function ProofVerify() {
     { id: 5, title: 'Read the raw state over RPC', expect: 'the same numbers the page shows.', cli: curl, run: async () => { const { value } = await v.getState(c); return `round ${value.round_id} · pot ${value.pot} yocto · supply ${value.supply}`; } },
   ];
   return (
-    <main className="page proof">
-      <h1 className="page-title">How to verify</h1>
-      <Art name="screens/verify.webp" className="page-art" eager />
-      <p className="page-lead">Read-only, no key needed. Do this, see that.</p>
+    <main className="page proof proof-verify">
+      <header className="verify-head">
+        <div>
+          <h1 className="page-title">How to verify</h1>
+          <p className="page-lead">Read-only, no key needed. Do this, see that.</p>
+        </div>
+        <Art name="screens/verify.webp" className="page-art" eager />
+      </header>
       <ol className="verify-list">{steps.map((s) => <VerifyStep key={s.id} step={s} />)}</ol>
     </main>
   );

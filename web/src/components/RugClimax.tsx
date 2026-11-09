@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { explorerTx } from '../chain/journal';
 import type { RugRecord } from '../chain/types';
-import { B, fmtNear } from '../format/near';
+import { B, fmtNear, thiefName } from '../format/near';
+import { Pic } from '../landing/art';
 import { useReducedMotion } from '../hooks/context';
 import { Art } from './common';
 import { ShareButton } from './ShareButton';
@@ -41,12 +42,14 @@ export function RugClimax({ rug, you, hash, onPhase, onClose }: { rug: RugRecord
   }, [phase >= 3, phase >= FINAL_PHASE, reduced]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const final = phase >= FINAL_PHASE;
+  const name = thiefName(rug.rugger);
   return (
     <div className="climax" data-testid="rug-climax" data-phase={phase} data-reduced={reduced ? '1' : undefined} role="dialog" aria-modal="true" aria-label="The pot has been stolen" onClick={() => setPhase(FINAL_PHASE)}>
       <p className="sr-only" aria-live="assertive">{`${rug.rugger} rugged round ${rug.round_id}.`}</p>
       <div className="climax-floor">
         <Art name="scene/floor.webp" className="climax-floor-img" eager />
         <div className="climax-pile"><Art name="scene/pile-4.webp" eager /></div>
+        <Pic n="heap-5-hoard" className="climax-hoard" eager sizes="100vw" />
       </div>
       <canvas ref={canvas} className="climax-canvas" width={390} height={844} aria-hidden="true" />
       <div className="climax-count" aria-hidden="true">
@@ -60,7 +63,13 @@ export function RugClimax({ rug, you, hash, onPhase, onClose }: { rug: RugRecord
       <div className="climax-poster" data-testid="rug-climax-poster">
         <WantedPoster rug={rug} big testId="rug-climax-wanted" />
         <p className="climax-winner" data-testid="rug-climax-winner">
-          {you ? 'YOU RUGGED IT' : `${rug.rugger} STOLE ${fmtNear(B(rug.payout))} NEAR`}
+          {you ? 'YOU RUGGED IT' : (
+            <>
+              <span className="cw-name" style={{ '--name-chars': name.length } as CSSProperties}>{name}<small>{rug.rugger.slice(name.length)}</small></span>{' '}
+              <span className="cw-stole">STOLE</span>{' '}
+              <span className="cw-amt">{fmtNear(B(rug.payout))} NEAR</span>
+            </>
+          )}
         </p>
         <Art name="stamps/rugged.webp" className="climax-rugged" alt="" eager />
         {you && hash ? <a className="climax-hash" href={explorerTx(hash)} target="_blank" rel="noreferrer">{hash.slice(0, 16)}… ↗</a> : null}
@@ -134,10 +143,7 @@ function startCoins(el: HTMLCanvasElement | null): (() => void) | void {
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#3A1D0E';
-      ctx.font = `700 ${c.r}px "DM Mono"`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('N', 0, 1);
+      ctx.fillRect(-c.r * 0.3, -c.r * 0.3, c.r * 0.6, c.r * 0.6); // the square-holed coin of the heap
       ctx.restore();
     }
     if (coins.some((c) => c.y < H + 40)) raf = requestAnimationFrame(frame);

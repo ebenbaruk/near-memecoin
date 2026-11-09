@@ -30,10 +30,17 @@ export function RugWall() {
   const indexed = rugs.map((r, i) => ({ r, i }));
   const biggest = indexed.reduce<{ r: RugRecord; i: number } | null>((b, c) => (!b || B(c.r.pot_before) > B(b.r.pot_before) ? c : b), null);
   const rest = indexed.filter((c) => c.i !== biggest?.i).reverse();
+  const stolen = rugs.reduce((sum, r) => sum + B(r.payout), 0n);
   return (
     <main className="page wall" data-testid="rug-wall">
       <h1 className="page-title">Rug Wall</h1>
       <p className="page-lead">Everyone who ever stole the pot, forever.</p>
+      {rugs.length ? (
+        <dl className="wall-stats">
+          <div><dt>Rugs</dt><dd>{rugs.length}</dd></div>
+          <div><dt>Stolen, in total</dt><dd>{fmtNear(stolen)} <small>NEAR</small></dd></div>
+        </dl>
+      ) : null}
       <Art name="thieves/silhouette-sack.webp" className="wall-thief" alt="" />
       {biggest ? (
         <section data-testid="biggest-heist" className="biggest">

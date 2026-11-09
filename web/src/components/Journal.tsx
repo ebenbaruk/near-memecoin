@@ -68,7 +68,7 @@ export function Journal() {
     return out;
   }, [filter, len, snap.journal, acct.id, suffix]);
 
-  const viewH = 560;
+  const viewH = Math.max(560, scroller.current?.clientHeight ?? 0);
   const first = Math.max(0, Math.floor(scroll / ROW_H) - OVERSCAN);
   const last = Math.min(indexes.length, Math.ceil((scroll + viewH) / ROW_H) + OVERSCAN);
   const visible = indexes.slice(first, last);

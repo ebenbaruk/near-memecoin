@@ -255,6 +255,19 @@ export class ChainStore {
     }
   }
 
+  /** Loads the journal back from its end, a page at a time, until the last finished round is complete. */
+  async ensureLastRound(): Promise<void> {
+    const len = this.snap.state?.journal_len ?? 0;
+    let to = len;
+    while (to > 0) {
+      const from = Math.max(0, to - PAGE);
+      await this.ensureRange(from, to, len);
+      const tail = this.snap.journal.slice(from, len);
+      if (tail.filter((e) => e?.kind === 'rug').length >= 2) return;
+      to = from;
+    }
+  }
+
   async ensureAll(): Promise<number> {
     const len = this.snap.state?.journal_len ?? 0;
     await this.ensureRange(0, len, len);
@@ -262,11 +275,17 @@ export class ChainStore {
   }
 }
 
+/** Locked only when the contract would really refuse: a buy-then-rug lands its own fee in the pot before the rug tests the minimum, which get_gap_buy's `feasible` accounts for. */
 export function zoneOf(state: State, params: Params, gap: GapBuy | null): Zone {
-  if (B(state.pot) < B(params.pot_min)) return 'locked';
-  if (!gap) return 'cold';
+  if (!gap) return B(state.pot) < B(params.pot_min) ? 'locked' : 'cold';
+  if (!gap.feasible) return 'locked';
   if (gap.positive) return 'live';
   return B(gap.abs) * 4n > B(gap.cost) ? 'cold' : 'warm';
+}
+
+/** The rug price: what taking the pot costs right now, including the fixed fee. pot - this = the take. */
+export function rugPriceOf(gap: GapBuy | null, params: Params | null): bigint | null {
+  return gap && params ? B(gap.cost) + B(params.rug_fee) : null;
 }
 
 /** How far the corner is peeled: the Gap, drawn. Numbers come from the art manifest. */

@@ -1,6 +1,6 @@
 import { test, expect, shot, open, expectTargets, NOW } from '../lib/fixtures';
 
-const THREE = ['Every trade drops 2% into the pot.', 'and the whole pot is yours.', "Anyone can. Right now. That's the coin."];
+const THREE = ['Every trade adds 2% to the pot.', 'coins to take it.', 'It only pays once the pot is bigger than the rug price.'];
 
 test('first visit: pot, price, 3 lines visible without clicking, disclosure', async ({ page, m }) => {
   m.setZone('cold');
@@ -8,7 +8,7 @@ test('first visit: pot, price, 3 lines visible without clicking, disclosure', as
   await expect(page.getByTestId('instance-banner')).toContainText('FAST DEMO INSTANCE');
   await expect(page.getByRole('heading', { name: /STEAL THIS POT/ })).toContainText('NEAR.');
   await expect(page.getByTestId('pot-value')).toHaveText('0.200');
-  await expect(page.getByTestId('rug-price-value')).toHaveText('0.800');
+  await expect(page.getByTestId('rug-price-value')).toHaveText('0.806');
   for (const line of THREE) await expect(page.getByTestId('explainer')).toContainText(line);
   await expect(page.getByTestId('disclosure-short')).toContainText('Testnet only.');
   await expect(page.getByTestId('round-number')).toHaveText('4');
@@ -63,7 +63,7 @@ test('gap details and explainer open', async ({ page, m }) => {
   await open(page);
   await page.getByTestId('gap-details').locator('summary').click();
   await expect(page.getByTestId('gap-detail-hold')).toContainText('NEAR');
-  await expect(page.getByTestId('gap-detail-whale')).toContainText(/\.testnet|NEAR/);
+  await expect(page.getByTestId('gap-detail-whale')).toContainText(/\.acr-ops|\.testnet|NEAR/);
   await page.getByTestId('explainer-whats-a-rug').locator('summary').click();
   await expect(page.getByTestId('explainer-whats-a-rug')).toContainText('run off with the money');
   await page.getByTestId('explainer').scrollIntoViewIfNeeded();
@@ -132,4 +132,28 @@ test.describe('failures', () => {
     await expect(page.getByRole('link', { name: 'Open the other instance' })).toHaveAttribute('href', '?i=live');
     await shot(page, '09-instance-missing');
   });
+});
+
+test.describe('faucet refusal', () => {
+  test.use({ allowConsole: ['Failed to load resource'] });
+  test('the refusal lands on the first screen, with no developer talk', async ({ page, m }) => {
+    m.setZone('cold');
+    m.faucet = { status: 429, body: '{}' };
+    await page.goto('/?i=fast#/');
+    await page.getByTestId('landing-try').click();
+    const refused = page.getByTestId('next-refused');
+    await expect(refused).toContainText('The free-money tap is busy.');
+    await expect(refused).toBeInViewport();
+    await expect(page.locator('.app')).not.toContainText('npm run');
+  });
+});
+
+test('after the throwaway account, the phone first screen shows it', async ({ page, m }) => {
+  m.setZone('cold');
+  await page.goto('/?i=fast#/');
+  await page.getByTestId('landing-try').click();
+  await expect(page.getByTestId('next-account')).toBeInViewport({ timeout: 8000 });
+  await expect(page.getByTestId('next-account')).toContainText('NEAR');
+  await page.getByTestId('next-line').click();
+  await expect(page.getByTestId('buy-sheet')).toBeVisible();
 });

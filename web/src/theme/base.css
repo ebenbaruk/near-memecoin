@@ -14,30 +14,30 @@ img { display: block; max-width: 100%; }
 .small { font-size: 12px; }
 code { font-family: var(--font-mono); font-size: 0.92em; }
 
-.app { position: relative; max-width: 480px; margin: 0 auto; min-height: 100dvh; background: var(--bg); color: var(--fg); overflow-x: clip; }
-.app::before { content: ''; position: fixed; inset: 0; margin-inline: auto; max-width: 480px; background: var(--pink); opacity: 0; pointer-events: none; }
+.app { position: relative; min-height: 100dvh; background: var(--bg); color: var(--fg); overflow-x: clip; }
+.app::before { content: ''; position: fixed; inset: 0; background: var(--pink); opacity: 0; pointer-events: none; }
 .app[data-zone='live']::before { animation: live-swap 1.4s steps(1) infinite; }
 @keyframes live-swap { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 .app > * { position: relative; }
-@media (min-width: 481px) { body { background: var(--brown) var(--weave); } }
 
 /* Banner: 32px. The switch is a 44px target that overflows the bar. */
 .banner { z-index: 12; display: flex; align-items: center; height: var(--banner-h); padding: 0 6px 0 10px; background: var(--ink); color: var(--cream); font-family: var(--font-mono); font-size: 10px; }
 .banner-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.01em; }
 .banner-switch { flex: none; height: 44px; margin-block: -6px; min-width: 44px; display: grid; place-items: center; }
+.banner-switch .wide { display: none; }
 .banner-switch span { display: block; padding: 2px 7px; border: 1.5px solid var(--cream); background: var(--ink); text-transform: uppercase; font-size: 10px; }
 .frozen-banner { z-index: 11; padding: 8px 12px; background: var(--mustard); color: var(--brown); font-weight: 600; font-size: 13px; }
 
 /* Bottom nav and dock */
-.bottomnav { position: fixed; z-index: 20; bottom: 0; left: 0; right: 0; margin-inline: auto; max-width: 480px; display: flex; height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b); background: var(--ink); border-top: 3px solid var(--cream); }
+.bottomnav { position: fixed; z-index: 20; bottom: 0; left: 0; right: 0; display: flex; height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b); background: var(--ink); border-top: 3px solid var(--cream); }
 .nav-item { flex: 1; display: grid; place-items: center; min-height: 44px; font-family: var(--font-mono); font-weight: 500; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; color: var(--cream); }
 .nav-item.active { background: var(--cream); color: var(--ink); }
 
-.dock { position: fixed; z-index: 21; left: 0; right: 0; margin-inline: auto; max-width: 480px; bottom: calc(var(--nav-h) + var(--safe-b)); height: var(--action-h); display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; padding: 8px 10px; background: var(--brown); }
+.dock { position: fixed; z-index: 21; left: 0; right: 0; bottom: calc(var(--nav-h) + var(--safe-b)); height: var(--action-h); display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; padding: 8px 10px; background: var(--brown); }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 16px; border: 3px solid var(--brown); box-shadow: 0 4px 0 var(--ink); font-family: var(--font-display); font-size: 18px; line-height: 1; text-decoration: none; text-align: center; transition: transform 0.08s; }
 .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+.btn:disabled { background: var(--sage); color: var(--brown); border: 3px dashed var(--brown); cursor: not-allowed; box-shadow: none; }
 .btn-buy { background: var(--teal); color: var(--cream); }
 .btn-sell { background: var(--cream); color: var(--brown); }
 .btn-rug { background: var(--pink); color: var(--brown); font-size: 22px; }
@@ -47,6 +47,7 @@ code { font-family: var(--font-mono); font-size: 0.92em; }
 
 .badge { display: inline-block; padding: 0 5px; font-family: var(--font-mono); font-weight: 500; font-size: 10px; line-height: 16px; vertical-align: 1px; }
 .badge.bot { background: var(--cobalt); color: var(--cream); }
+.badge.test { background: var(--mustard); color: var(--brown); }
 .badge.immutable { background: var(--teal); color: var(--cream); }
 
 .state-view { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 20px; text-align: center; }
@@ -68,4 +69,5 @@ code { font-family: var(--font-mono); font-size: 0.92em; }
   .app[data-zone='live']::before { display: none; }
 }
 
+.l-boot { min-height: 100dvh; display: grid; place-items: center; font-family: var(--font-mono); color: var(--sage); background: var(--ink); }
 .grain { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.16; background: url('/art/decor/grain-tile.webp') repeat 0 0 / 128px 128px; }

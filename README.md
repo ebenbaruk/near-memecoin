@@ -30,13 +30,13 @@ T = ceil(tau * max(S, floor(0.9 * HWM)))     tau = 5 %, S = supply, HWM = rememb
 
 Each step is "do X, see Y". None needs a secret or a wallet.
 
-1. **Do** `npm ci && npm run verify` (Node 24, see `.nvmrc`; Rust optional). **See** a `PASS / FAIL / SKIP` table and exit code 0. A step that could not run prints `SKIP`, never `PASS`.
+1. **Do** `npm ci && npx playwright install chromium && npm run verify` (Node 24, see `.nvmrc`; on Linux use `npx playwright install --with-deps chromium`; Rust optional, without it the Rust step prints `SKIP`). **See** a `PASS / FAIL / SKIP` table and exit code 0. A step that could not run prints `SKIP`, never `PASS`.
 2. **Do** read the keys of the contract:
    ```bash
    curl -s https://test.rpc.fastnear.com -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"request_type":"view_access_key_list","finality":"final","account_id":"anyonecanrug.testnet"}}'
    ```
    **See** `"keys":[]`. Same for `rugfast.acr-ops.testnet`. Without a key nobody can sign for that account, so nobody can redeploy or change a parameter, including the author.
-3. **Do** open the demo. **See** the pot, the rug price, the gap between them, and the log of every mint and burn. Bot accounts carry a `BOT` badge derived from their `.acr-bots.testnet` suffix.
+3. **Do** open the demo. **See** a landing page with the 5 requirements under **For judges** (`#/judges`), then the game at `#/play`: the pot, the rug price, the take (pot minus rug price, called the gap in the contract), and the log of every mint and burn. Bot accounts carry a `BOT` badge derived from their `.acr-bots.testnet` suffix.
 4. **Do** open a rug entry in the log and follow its explorer link. **See** the burn and the payout in a real testnet transaction.
 5. **Do** `npm run try:testnet`. **See** a throwaway account created at the public faucet, then a buy, a sell, and a buy + rug in one atomic transaction on the fast instance, each with an explorer link. The account is deleted afterwards. The faucet rate-limits by IP; if it refuses, the script says so and exits with code 3.
 6. **Do** `npm run sim -- --quick` (seconds). **See** a smoke run with 0 invariant violations and a matching golden hash. `npm run sim` rebuilds the tables below, deterministically from the seeds.
@@ -157,7 +157,7 @@ If the server goes down, the mechanic keeps working and so does anyone serving `
 | Sandbox | Promises, callbacks, refunds, atomic batches, failed payouts, gas | 9 | `cargo test -p integration-tests` |
 | Testnet smoke | Real transactions, on a rehearsal then on final accounts | 29 checks | `npx tsx scripts/e2e-testnet.ts <contract>` |
 | Simulator and bots | Rules, scenarios, bot decisions | 32 + 10 | `npm test -w sim`, `npm test -w bots` |
-| Page, 390×844 | Every screen and state, on captured real RPC responses | 53 | `npm run e2e` |
+| Page, 390×844, 1440×900 and 1920×1080 | Every screen and state, on captured real RPC responses | 184 across the three viewports | `npm run e2e` |
 
 Local run: `npm ci`, then `npm run web` and open `http://localhost:5180`. Production server: `node bots/server.mjs` after `npm run -w web build`.
 

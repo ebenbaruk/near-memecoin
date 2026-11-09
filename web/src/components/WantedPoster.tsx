@@ -19,7 +19,7 @@ export function WantedPoster({ rug, big, testId }: { rug: RugRecord; big?: boole
   const crime = `STOLE ${fmtNear(B(rug.payout))} NEAR`;
   return (
     <div className={`poster${big ? ' big' : ''}`} data-testid={testId ?? 'wanted-poster'}>
-      <Art name="wanted/poster-blank.webp" className="poster-bg" alt="" eager={big} />
+      <Art name="wanted/poster-blank-cut.webp" className="poster-bg" alt="" eager={big} />
       <Mugshot account={rug.rugger} />
       <span className="stamp-round">
         {bot ? <Art name="stamps/bot.webp" className="poster-botstamp" alt="BOT" eager={big} /> : null}

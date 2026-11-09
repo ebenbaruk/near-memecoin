@@ -13,9 +13,14 @@ export function Art({ name, alt = '', className, eager }: { name: string; alt?: 
   return <img src={src} alt={alt} className={className} draggable={false} loading={eager ? 'eager' : 'lazy'} decoding="async" />;
 }
 
+/** The author's own end-to-end test accounts. They are labelled like the bots, so nobody mistakes them for players. */
+export const TEST_SUFFIX = '.acr-ops.testnet';
+
 export function BotBadge({ account }: { account: string }) {
   const { instances } = useApp();
-  return account.endsWith(instances.botSuffix) ? <span className="badge bot" title="Account ends with the public bot suffix">BOT</span> : null;
+  if (account.endsWith(instances.botSuffix)) return <span className="badge bot" title="Account ends with the public bot suffix">BOT</span>;
+  if (account.endsWith(TEST_SUFFIX)) return <span className="badge test" title="One of the author's test accounts">TEST</span>;
+  return null;
 }
 
 const BOT_TEXT = "Demo bots are asleep. The coin doesn't need them. You can still rug it.";
@@ -64,7 +69,7 @@ export function ExplorerLink({ entry, block }: { entry?: JournalEntry; block: nu
         });
       }}
     >
-      {state === 'loading' ? '…' : 'Find tx'}
+      {state === 'loading' ? '…' : 'Explorer'}
     </button>
   );
 }
@@ -113,7 +118,19 @@ export function useModal(onClose: () => void) {
   return ref;
 }
 
-export function Sheet({
+/** A form that is a bottom sheet on phones and an inline panel in the desktop console. */
+export function Sheet(props: { testId: string; title: string; onClose: () => void; full?: boolean; inline?: boolean; children: ReactNode }) {
+  if (props.inline) {
+    return (
+      <section className="sheet-inline" aria-label={props.title} data-testid={props.testId}>
+        <div className="sheet-body">{props.children}</div>
+      </section>
+    );
+  }
+  return <ModalSheet {...props} />;
+}
+
+function ModalSheet({
   testId, title, onClose, full, children,
 }: { testId: string; title: string; onClose: () => void; full?: boolean; children: ReactNode }) {
   const ref = useModal(onClose);

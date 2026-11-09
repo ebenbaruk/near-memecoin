@@ -1,4 +1,6 @@
 // Reads web/public/art/manifest.json, the contract between the art and the code.
+import { useSyncExternalStore } from 'react';
+
 export interface AssetInfo { path: string; width: number; height: number; bytes: number; role: string }
 export interface ZoneArt { rug: string; lift?: number; liftRange?: [number, number]; mascot: string; hand: boolean }
 export interface ArtManifest {
@@ -28,23 +30,47 @@ export interface ArtManifest {
 }
 
 let manifest: ArtManifest | null = null;
+let settled = false;
+const listeners = new Set<() => void>();
 
+/** Never blocks the first paint: the page renders immediately and re-renders when the manifest arrives. */
 export async function loadArt(): Promise<void> {
   try {
     const res = await fetch('./art/manifest.json');
-    if (!res.ok) return;
-    manifest = (await res.json()) as ArtManifest;
-    if (manifest.scene?.css) {
-      const style = document.createElement('style');
-      style.textContent = manifest.scene.css;
-      document.head.appendChild(style);
+    if (res.ok) {
+      manifest = (await res.json()) as ArtManifest;
+      if (manifest.scene?.css) {
+        const style = document.createElement('style');
+        style.textContent = manifest.scene.css;
+        document.head.appendChild(style);
+      }
     }
   } catch {
     manifest = null;
+  } finally {
+    settled = true;
+    listeners.forEach((l) => l());
   }
 }
 
 export const art = () => manifest;
+
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+/** The manifest, re-rendering once it has arrived (null until then, and if it could not be fetched). */
+export function useArt(): ArtManifest | null {
+  return useSyncExternalStore(subscribe, art);
+}
+
+/** False until the manifest fetch has finished, either way. */
+export function useArtSettled(): boolean {
+  return useSyncExternalStore(subscribe, () => settled);
+}
 
 export const artPalette: Record<string, [number, number, number]> = {
   ink: [0x14, 0x16, 0x0d], brown: [0x3a, 0x1d, 0x0e], cream: [0xf6, 0xef, 0xdc], mustard: [0xf2, 0xc2, 0x30], rust: [0xf0, 0x56, 0x2b],

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore } from 'react';
 import type { AccountStore } from '../chain/account';
 import type { ChainStore } from '../chain/store';
 import type { InstanceInfo, InstancesFile } from '../chain/types';
@@ -48,4 +48,28 @@ export function useReducedMotion(): boolean {
     return () => m.removeEventListener('change', on);
   }, []);
   return reduced;
+}
+
+const DESKTOP_QUERY = '(min-width: 900px)';
+const desktopMql = () => matchMedia(DESKTOP_QUERY);
+
+/** True above the width where the game recomposes as a desktop layout (kept in sync with theme/desktop.css). */
+export function useDesktop(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      const m = desktopMql();
+      m.addEventListener('change', cb);
+      return () => m.removeEventListener('change', cb);
+    },
+    () => desktopMql().matches,
+  );
+}
+
+/** Starts the no-wallet flow and goes to the game: the throwaway account comes from the testnet faucet. */
+export function useTryIt(): () => void {
+  const { account } = useApp();
+  return useCallback(() => {
+    location.hash = '#/play';
+    if (!account.getSnapshot().id) void account.createBurner();
+  }, [account]);
 }

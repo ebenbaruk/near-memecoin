@@ -7,12 +7,19 @@
 .page section { display: grid; gap: 8px; }
 .page h2 { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.05; }
 
-.wall { color: var(--cream); min-height: 100dvh; background: var(--ink) url('/art/wanted/wall.webp') center top / 100% auto repeat-y; }
+/* A brick wall in thread: running-bond courses, no specks to mistake for dirt on the screen. */
+.wall { color: var(--cream); min-height: 100dvh; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='104'%3E%3Cpath d='M0 3h200M0 55h200M100 3v52M0 55v52M200 55v52' stroke='%233A1D0E' stroke-width='6' fill='none'/%3E%3C/svg%3E") 0 0 / 200px 104px; }
+.wall-stats { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin: 0; }
+.wall-stats div { padding: 6px 12px 8px; background: var(--mustard); color: var(--brown); border: 3px solid var(--brown); box-shadow: 3px 4px 0 var(--brown); }
+.wall-stats div:nth-child(2) { background: var(--pink); }
+.wall-stats dt { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+.wall-stats dd { font-family: var(--font-display); font-size: 34px; line-height: 1.05; }
+.wall-stats small { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
 .wall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .ribbon-img { font-size: 0; }
 .biggest { display: grid; gap: 8px; }
 .ribbon { justify-self: start; padding: 4px 14px; background: var(--mustard); color: var(--brown); border: 3px solid var(--brown); transform: rotate(-2deg); font-size: 22px !important; }
-.rug-card { display: grid; gap: 8px; align-content: start; padding: 8px; background: var(--ink); color: var(--cream); border: 2px solid var(--brown); }
+.rug-card { display: grid; gap: 8px; align-content: start; color: var(--cream); }
 .rug-card.featured { grid-template-columns: 170px 1fr; align-items: start; }
 .rug-card-text { display: grid; gap: 8px; }
 .rug-card-line { font-size: 15px; overflow-wrap: anywhere; }
@@ -39,10 +46,11 @@
 .j-main p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; line-height: 1.25; }
 .j-main p.small { font-size: 12px; }
 
-.proof-tabs { display: flex; gap: 6px; padding: 10px 14px 0; background: var(--sage); color: var(--brown); }
+.proof-tabs { position: relative; display: flex; gap: 6px; padding: 10px 14px 38px; background: var(--ink); color: var(--cream); }
+.proof-tabs::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: url('/art/decor/fringe-strip.webp') repeat-x left top / auto 30px; }
 .proof-tabs .chip { flex: 1 1 auto; padding: 0 6px; font-size: 12px; white-space: nowrap; }
-.proof-tabs .chip.active { background: var(--brown); color: var(--cream); border-color: var(--brown); }
-.proof { background: var(--sage); color: var(--brown); min-height: 100dvh; }
+.proof-tabs .chip.active { background: var(--cream); color: var(--brown); border-color: var(--cream); }
+.proof { background-color: var(--sage); background-image: var(--weave-soft); color: var(--brown); min-height: 100dvh; }
 .big-count { font-family: var(--font-display); font-size: 58px; line-height: 1; }
 .ok { font-weight: 700; color: var(--brown); }
 .danger-banner { padding: 10px 12px; background: var(--rust); color: var(--ink); font-weight: 700; border: 3px solid var(--brown); }
@@ -54,12 +62,18 @@
 .param-table td.mono { font-size: 12px; overflow-wrap: anywhere; word-break: break-all; max-width: 120px; }
 .method-row { grid-column: 1 / -1; display: grid; gap: 1px; padding: 4px 0; border-bottom: 1px dashed var(--brown); }
 .method-row dd { text-align: left; font-family: var(--font-body); font-weight: 400; font-size: 13px; }
-.verify-list { display: grid; gap: 12px; }
-.verify-step { display: grid; gap: 6px; padding: 12px; background: var(--cream); border: 3px solid var(--brown); }
-.verify-step h3 { font-family: var(--font-display); font-weight: 400; font-size: 20px; }
+.verify-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.verify-head .page-art { width: 118px; flex: none; }
+.verify-list { display: block; }
+.verify-step { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 8px 10px; padding: 14px 0; border-top: 4px solid var(--brown); }
+.vs-n { font-family: var(--font-display); font-size: 58px; line-height: 0.86; }
+.vs-main { display: grid; gap: 6px; min-width: 0; }
+.vs-run { grid-column: 2; display: grid; gap: 6px; }
+.verify-step h3 { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.04; }
+.verify-step .expect b { font-weight: 700; }
 .verify-result { padding: 6px 8px; background: var(--brown); color: var(--cream); font-family: var(--font-mono); font-size: 13px; overflow-wrap: anywhere; }
 .sim-banner { padding: 8px 12px; background: var(--ink); color: var(--cream); font-family: var(--font-mono); font-weight: 500; text-align: center; }
-.sim-scenario { display: grid; gap: 4px; padding: 10px; background: var(--cream); border: 3px solid var(--brown); }
+.sim-scenario { display: grid; gap: 4px; }
 .sim-scenario h3 { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
 .sim-chart { width: 100%; height: auto; touch-action: pan-y; }
 
@@ -67,13 +81,14 @@
 .wall-thief { position: absolute; right: 8px; top: 8px; width: 118px; }
 .wall .page-title, .wall .page-lead { width: 62%; }
 
-.sim-limits { padding: 12px; background: var(--rust); color: var(--ink); border: 3px solid var(--brown); }
+.sim-limits { padding: 12px 16px; background: var(--rust); color: var(--ink); }
 .sim-limits h2 { color: var(--ink); }
 .sim-limits ul { display: grid; gap: 6px; font-size: 16px; font-weight: 600; }
 .sim-limits b { font-family: var(--font-display); font-weight: 400; font-size: 24px; }
 .sim-legend { display: flex; flex-wrap: wrap; gap: 10px 14px; }
 .sim-legend i { display: inline-block; width: 16px; height: 0; margin-right: 5px; vertical-align: middle; border-top: 3px solid var(--teal); }
 .sim-legend .k-band { height: 9px; border: 0; background: var(--teal); opacity: 0.3; }
+.sim-legend .k-repr { border-top: 1px solid var(--cobalt); }
 .sim-legend .k-ctl { border-top: 2px dashed var(--ink); }
 .sim-legend .k-rug { width: 0; height: 12px; border-top: 0; border-left: 2px solid var(--rust); }
 .sim-multiples { display: grid; gap: 10px; }

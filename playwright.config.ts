@@ -20,7 +20,14 @@ export default defineConfig({
     isMobile: true,
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { browserName: 'chromium', ...devices['Pixel 5'], viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 } }],
+  projects: [
+    { name: 'chromium', testIgnore: /desktop\.spec/, use: { browserName: 'chromium', ...devices['Pixel 5'], viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 } },
+    ...[[1440, 900], [1920, 1080]].map(([width, height]) => ({
+      name: `desktop-${width}`,
+      testMatch: /(desktop|landing)\.spec/,
+      use: { browserName: 'chromium' as const, viewport: { width, height }, deviceScaleFactor: 1, isMobile: false, hasTouch: false },
+    })),
+  ],
   webServer: {
     command: `npm run -s -w web build && npm run -s -w web preview -- --port ${PORT}`,
     url: `http://localhost:${PORT}/index.html`,

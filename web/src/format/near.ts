@@ -27,11 +27,31 @@ function render(v: bigint, unit: bigint, digits: number, trim: boolean, signed: 
   return `${sign}${group(int)}${f ? `.${f}` : ''}`;
 }
 
+function fixedDigits(yocto: bigint): number {
+  const abs = yocto < 0n ? -yocto : yocto;
+  return abs >= 1000n * YOCTO ? 0 : abs >= 100n * YOCTO ? 1 : abs >= 10n * YOCTO ? 2 : 3;
+}
+
 /** Headline NEAR: fixed number of decimals so the title does not jump as the pot moves. */
 export function fmtNearFixed(yocto: bigint): string {
-  const abs = yocto < 0n ? -yocto : yocto;
-  const digits = abs >= 1000n * YOCTO ? 0 : abs >= 100n * YOCTO ? 1 : abs >= 10n * YOCTO ? 2 : 3;
-  return render(yocto, YOCTO, digits, false, false);
+  return render(yocto, YOCTO, fixedDigits(yocto), false, false);
+}
+
+/** The value fmtNearFixed prints, as a number: what the reader sees and can add up. */
+export function shownValue(yocto: bigint): bigint {
+  const digits = fixedDigits(yocto);
+  const step = YOCTO / 10n ** BigInt(digits);
+  return ((yocto + step / 2n) / step) * step;
+}
+
+/** The take on screen is the pot on screen minus the rug price on screen, so the three always add up. */
+export function shownTake(pot: bigint, rugPrice: bigint): bigint {
+  return shownValue(pot) - shownValue(rugPrice);
+}
+
+/** A signed amount with three decimals, for the take. */
+export function fmtNearSignedFixed(yocto: bigint): string {
+  return render(yocto, YOCTO, 3, false, true);
 }
 
 export function fmtNear(yocto: bigint, digits = 3): string {
@@ -72,10 +92,13 @@ export const ceilPct = (v: bigint, percentBump: bigint): bigint => {
   return num % 100n === 0n ? num / 100n : num / 100n + 1n;
 };
 
+/** The name without the network, as a poster would print it. */
+export const thiefName = (account: string) => account.replace(/\.(acr-ops\.|acr-bots\.)?testnet$/, '');
+
+/** Never chops a suffix in half: the network goes first, then the end of the name. The full id belongs in a title attribute. */
 export function shortAccount(id: string, max = 24): string {
-  if (id.length <= max) return id;
-  const head = Math.ceil((max - 1) * 0.6);
-  return `${id.slice(0, head)}…${id.slice(id.length - (max - 1 - head))}`;
+  const name = id.replace(/\.testnet$/, '');
+  return name.length <= max ? name : `${name.slice(0, max - 1)}…`;
 }
 
 export function ago(tsMs: number, now: number): string {

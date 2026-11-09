@@ -3,7 +3,7 @@ import { NEAR, ONE } from '../lib/mock';
 
 async function burner(page: import('@playwright/test').Page) {
   await page.getByTestId('try-no-wallet').click();
-  await expect(page.getByTestId('burner-status')).toContainText('Burner ready: 10 NEAR');
+  await expect(page.getByTestId('account-id')).toBeVisible();
   return (await page.getByTestId('account-id').getAttribute('title'))!;
 }
 
@@ -23,7 +23,7 @@ test('rug sheet: frozen quote, buy and rug, hold, YOU RUGGED IT', async ({ page,
   await shot(page, '20-rug-disconnected');
   const id = await burner(page);
   await expect(page.getByTestId('rug-round')).toHaveText('4');
-  await expect(page.getByTestId('rug-pot-seen')).toContainText('1.2 NEAR');
+  await expect(page.getByTestId('rug-pot-seen')).toContainText('1.200 NEAR');
   await expect(page.getByTestId('rug-burn-tokens')).toContainText('25,000');
   await expect(page.getByTestId('rug-tokens-to-buy')).toContainText('24,000');
   await expect(page.getByTestId('rug-net')).toContainText('+0.394');
@@ -89,14 +89,32 @@ test('two-step confirm', async ({ page, m }) => {
   await expect(page.getByTestId('rug-climax')).toBeVisible();
 });
 
-test('negative gap: warning and Rug it anyway', async ({ page, m }) => {
+test('negative gap: warning and Hold to rug anyway', async ({ page, m }) => {
   m.setZone('cold');
   await open(page);
   await page.getByTestId('dock-rug').click();
   await burner(page);
   await expect(page.getByTestId('rug-loss-warning')).toContainText('You would lose 0.606 NEAR doing this.');
-  await expect(page.getByTestId('rug-hold')).toContainText('Rug it anyway');
+  await expect(page.getByTestId('rug-hold')).toContainText('Hold to rug anyway');
   await shot(page, '25-rug-loss');
+});
+
+test('the numbers on the rug sheet add up by hand, and a short click gets an answer', async ({ page, m }) => {
+  m.setZone('cold');
+  await open(page);
+  await page.getByTestId('dock-rug').click();
+  await burner(page);
+  await expect(page.getByTestId('rug-title')).toHaveText('Burn 25,000. Send 0.820, get back 0.214, net -0.606');
+  await expect(page.getByTestId('rug-margin')).toContainText('1% margin: sent too, buys spare coins you keep');
+  const hold = page.getByTestId('rug-hold');
+  const box = (await hold.boundingBox())!;
+  expect(box.y + box.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.up();
+  await expect(hold).toContainText('Keep holding');
+  expect(m.sent).toHaveLength(0);
+  await expect(hold).toContainText('Hold to rug anyway', { timeout: 4000 });
 });
 
 test('advanced: min payout can be lowered', async ({ page, m }) => {

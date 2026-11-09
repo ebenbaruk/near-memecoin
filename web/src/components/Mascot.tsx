@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { Zone } from '../chain/types';
-import { art, artUrl } from '../theme/art';
+import { artUrl, useArt } from '../theme/art';
 
 export type Expression = 'sleep' | 'one-eye' | 'curious' | 'sweat' | 'panic' | 'scream' | 'ripped' | 'ghost' | 'happy';
 
@@ -8,7 +8,7 @@ const FROM_ZONE: Record<Zone, Expression> = { locked: 'sleep', cold: 'one-eye', 
 
 /** Layered face (41 §5): body, eyes, pupils, blink lid, mouth, sweat. Parts come from the manifest. */
 function Layered({ ex, gaze, className }: { ex: Expression; gaze: number; className?: string }) {
-  const layers = art()?.mascot.layers;
+  const layers = useArt()?.mascot.layers;
   if (!layers) return null;
   const part = (name: string): CSSProperties => {
     const p = layers.parts[name];
@@ -33,8 +33,9 @@ function Layered({ ex, gaze, className }: { ex: Expression; gaze: number; classN
 
 export function Mascot({ zone, expression, gaze = 0, className }: { zone?: Zone; expression?: Expression; gaze?: number; className?: string }) {
   const ex = expression ?? (zone ? FROM_ZONE[zone] : 'curious');
+  const manifest = useArt();
   // Asleep and panicking are their own drawings; in between, the face is layers that blink and look.
-  if ((ex === 'one-eye' || ex === 'sweat') && art()?.mascot?.layers) return <Layered ex={ex} gaze={gaze} className={className} />;
+  if ((ex === 'one-eye' || ex === 'sweat') && manifest?.mascot?.layers) return <Layered ex={ex} gaze={gaze} className={className} />;
   const src = artUrl(`mascot/${ex}.webp`);
   if (!src) return null;
   return <img src={src} alt={`The Tapis looks ${ex}`} className={`mascot ${className ?? ''}`} data-expression={ex} draggable={false} />;

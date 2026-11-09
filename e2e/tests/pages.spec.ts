@@ -40,11 +40,11 @@ test('journal: filled, audit passes, rows, tx link', async ({ page, m }) => {
   await expect(page.getByTestId('journal-audit-result')).toHaveText('Journal matches supply: 13 events');
   await expect(page.getByTestId('journal-bot-share')).toContainText('bots share of volume 0.0%');
   const lines = await page.getByTestId('journal-row').first().locator('.ex-link').evaluate((el) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].map((c) => Math.round(c.top))).size; });
-  expect(lines, 'Find tx on one line').toBe(1);
+  expect(lines, 'Explorer on one line').toBe(1);
   await page.waitForTimeout(300);
   await expectTargets(page);
   await shot(page, '42-journal');
-  await page.getByTestId('journal-row').first().getByRole('button', { name: 'Find tx' }).click();
+  await page.getByTestId('journal-row').first().getByRole('button', { name: 'Explorer' }).click();
   await expect(page.getByTestId('journal-row').first().getByRole('link')).toHaveAttribute('href', /txns\/MockResolved/);
 });
 
@@ -98,7 +98,7 @@ test('rules: live params, keys, code hash, sybil, disclosures', async ({ page, m
   await expect(page.getByRole('alert')).toContainText('still has 1 access key');
   await expect(page.getByTestId('code-hash-live')).toHaveText(m.account.code_hash);
   await expect(page.getByTestId('code-hash-published')).toContainText(/[1-9A-HJ-NP-Za-km-z]{30,}/);
-  await expect(page.getByTestId('sybil-limits')).toContainText('the rug price counts tokens, not accounts');
+  await expect(page.getByTestId('sybil-limits')).toContainText('the coins you must burn are a share of supply, not of accounts');
   await expect(page.getByTestId('disclosure-long')).toContainText('Unaudited hackathon code.');
   await expectTargets(page);
   await page.waitForTimeout(300);
@@ -120,7 +120,7 @@ test('proof tabs navigate; verify steps run', async ({ page, m }) => {
   await expect(page.locator('[data-step="1"]').getByTestId('verify-result')).toContainText('matches supply: 13 events');
   await page.locator('[data-step="5"]').getByTestId('verify-run').click();
   await expect(page.locator('[data-step="5"]').getByTestId('verify-result')).toContainText('round 4');
-  await expect(page.locator('[data-step="1"]').getByTestId('verify-cli')).toHaveText('npm run verify');
+  await expect(page.locator('[data-step="1"]').getByTestId('verify-cli')).toHaveText('npm ci && npx playwright install chromium && npm run verify');
   await page.waitForTimeout(200);
   await shot(page, '52-verify');
   await page.getByTestId('proof-tab-rules').click();
@@ -173,7 +173,7 @@ test('forbidden words: none in the rendered copy or the README', async ({ page, 
   const BAD = [/rug-proof/i, /guaranteed/i, /guaranteed floor/i, /\bsafe\b/i, /risk-free/i, /\bAPY\b/, /\breturns\b/i, /\bprofit\b/i];
   m.setZone('live');
   const seen: string[] = [];
-  for (const h of ['#/', '#/wall', '#/log', '#/proof/rules', '#/proof/sim', '#/proof/verify']) {
+  for (const h of ['#/', '#/play', '#/wall', '#/log', '#/proof/rules', '#/proof/sim', '#/proof/verify']) {
     await open(page, h);
     await page.waitForTimeout(500);
     seen.push(await page.evaluate(() => document.body.innerText));

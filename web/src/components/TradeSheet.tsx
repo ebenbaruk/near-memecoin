@@ -4,6 +4,7 @@ import { explorerTx } from '../chain/journal';
 import { TGAS_100 } from '../chain/signer';
 import type { JournalEntry } from '../chain/types';
 import * as v from '../chain/views';
+import type { Params } from '../chain/types';
 import { B, YOCTO, fmtNear, fmtTokens, parseUnits, shortAccount, toNearInput, toTokenInput } from '../format/near';
 import { useAccount, useApp, useChain } from '../hooks/context';
 import { BurnerSetup, AccountSummary } from './AccountPanel';
@@ -15,7 +16,15 @@ const PCTS = [25n, 50n, 100n];
 type Phase = 'idle' | 'signing' | 'sent' | 'done' | 'failed' | 'cancelled';
 type Mode = 'buy' | 'sell';
 
-export function TradeSheet({ mode, onClose }: { mode: Mode; onClose: () => void }) {
+/** What a trade does to the pot, in one sentence: said beside the form on every screen size. */
+export function tradeHint(mode: Mode, params: Params | null): string {
+  const fee = params ? `${params.fee_bps / 100}%` : 'A fee';
+  return mode === 'buy' ? `Buy ${params ? `$${params.symbol}` : 'the coin'} on the curve. ${fee} of it drops into the pot.` : `Sell back to the curve at any time. ${fee} drops into the pot.`;
+}
+
+export interface Prefill { amount: string; n: number }
+
+export function TradeSheet({ mode, onClose, inline, prefill }: { mode: Mode; onClose: () => void; inline?: boolean; prefill?: Prefill | null }) {
   const { chain, account: accountStore } = useApp();
   const { params, journal, state } = useChain();
   const acct = useAccount();
@@ -62,6 +71,17 @@ export function TradeSheet({ mode, onClose }: { mode: Mode; onClose: () => void 
       window.clearTimeout(t);
     };
   }, [amount, invalid, buy, chain.contractId, acct.id]);
+
+  // The "Next" line suggests an amount: it lands in the field, ready to send.
+  const prefillN = prefill?.n;
+  useEffect(() => {
+    if (prefill && !busy) {
+      setPhase('idle');
+      setHash('');
+      setPrinted(null);
+      setText(prefill.amount);
+    }
+  }, [prefillN]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // When our line shows up in the journal, print it.
   useEffect(() => {
@@ -121,7 +141,8 @@ export function TradeSheet({ mode, onClose }: { mode: Mode; onClose: () => void 
   const unit = buy ? 'NEAR' : (params?.symbol ?? 'tokens');
 
   return (
-    <Sheet testId={`${prefix}-sheet`} title={buy ? 'Buy' : 'Sell'} onClose={onClose}>
+    <Sheet testId={`${prefix}-sheet`} title={buy ? 'Buy' : 'Sell'} onClose={onClose} inline={inline}>
+      {inline ? null : <p className="sheet-hint" data-testid="trade-hint">{tradeHint(mode, params)}</p>}
       {acct.id ? <AccountSummary /> : <BurnerSetup />}
       <label className="field">
         <span>{buy ? 'Amount in NEAR' : `Amount in $${unit}`}</span>
@@ -135,6 +156,7 @@ export function TradeSheet({ mode, onClose }: { mode: Mode; onClose: () => void 
           disabled={busy || phase === 'done'}
         />
       </label>
+      {acct.id ? <p className="pct-label" data-testid="pct-label">Share of your {buy ? `${fmtNear(budget)} NEAR, 0.05 kept for gas` : `${fmtTokens(budget)} tokens`}</p> : null}
       <div className="pct-row">
         {PCTS.map((p) => (
           <button key={p.toString()} type="button" className="btn btn-pct" disabled={!acct.id || budget === 0n || busy} onClick={() => pick(p)}>{p.toString()}%</button>
@@ -171,6 +193,7 @@ export function TradeSheet({ mode, onClose }: { mode: Mode; onClose: () => void 
       <button type="button" className={`btn btn-submit ${buy ? 'btn-buy' : 'btn-sell'}`} data-testid={`${prefix}-submit`} disabled={!canSubmit} onClick={() => void submit()}>
         {label}
       </button>
+      {inline && phase === 'done' ? <button type="button" className="btn btn-ghost" data-testid="trade-again" onClick={() => { setPhase('idle'); setText(''); setQuote(null); setHash(''); setPrinted(null); }}>{buy ? 'Buy again' : 'Sell again'}</button> : null}
       <TxOutcome phase={phase} hash={hash} error={error} />
       {printed ? (
         <div className="receipt-print" data-testid="tx-printed">

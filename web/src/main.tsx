@@ -8,6 +8,7 @@ import './theme/pot.css';
 import './theme/sheets.css';
 import './theme/climax.css';
 import './theme/pages.css';
+import './theme/desktop.css';
 import { createRoot } from 'react-dom/client';
 import { AccountStore } from './chain/account';
 import { ChainStore } from './chain/store';
@@ -23,7 +24,7 @@ async function boot() {
   const info = instances.instances[instanceKey];
   const chain = new ChainStore(info.contractId, `./snapshots/${instanceKey}.json`);
   const account = new AccountStore(info.contractId, (id) => chain.setAccount(id));
-  await loadArt();
+  void loadArt();
   createRoot(document.getElementById('root')!).render(
     <Ctx.Provider value={{ instanceKey, info, instances, chain, account }}>
       <App />

@@ -27,7 +27,7 @@ export const test = base.extend<Options & { m: MockChain }>({
     await installChain(page, m);
     await use(m);
     const sw = await page.evaluate(() => document.documentElement.scrollWidth);
-    expect(sw, 'horizontal overflow').toBeLessThanOrEqual(390);
+    expect(sw, 'horizontal overflow').toBeLessThanOrEqual(page.viewportSize()!.width);
     expect(pageErrors, 'page errors').toEqual([]);
     expect(consoleErrors, 'console errors').toEqual([]);
   },
@@ -40,7 +40,8 @@ export async function shot(page: Page, name: string, opts: { allowAnimations?: b
   await page.screenshot({ path: join(SHOTS, `${name}.png`), animations: opts.allowAnimations ? 'allow' : 'disabled', fullPage: opts.fullPage });
 }
 
-export async function open(page: Page, hash = '#/') {
+/** The game is at #/play; #/ is the landing page. */
+export async function open(page: Page, hash = '#/play') {
   await page.goto(`/?i=fast${hash}`);
 }
 
