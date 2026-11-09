@@ -1,6 +1,6 @@
 # Avancement
 
-**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte de la landing en cours. Reste : instance `film` et vidéo, accords humains.
+**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte en ligne (commit `30333a3`) : landing pleine largeur avec schémas et section juges, jeu desktop. Reste : retour du propriétaire sur le design, un rug de bot au journal, instance `film` et vidéo, accords humains.
 
 ## Par où commencer
 1. Lire `Docs/spec/10-spec.md`, puis la partie concernée de `Docs/spec/`.
@@ -14,6 +14,8 @@
 - 2026-11-08 : recherche, brainstorm (Anyone Can Rug), dépôt privé créé, spec écrite puis relue (cohérence, audit de sécurité, conformité, design), corrections appliquées.
 - Test testnet : un `yield` non repris s'exécute après 201 blocs et peut se réarmer. **Retiré du design** ; preuve dans `04-brainstorm-tour1.md`.
 - Prototype de simulation en flottants, à titre de référence seulement : `var/prototypes/rug-sim/` (hors git).
+
+- 2026-11-09 : refonte déployée. `npm ci && npx playwright install chromium && npm run verify` sur clone neuf sans `.env` : 33/33, 0 skip. `npm run e2e` : 184 réussis, 10 ignorés (propres à un viewport). `e2e:prod` : 6/6. Sur le site en ligne, le refus du faucet (429, retry 9 h) s'affiche proprement ; la transaction navigateur avec vrai faucet reste à faire.
 
 ## Reste à valider par le propriétaire, au moment venu
 Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
