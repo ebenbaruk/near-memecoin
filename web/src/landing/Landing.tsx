@@ -12,11 +12,12 @@ const Below = lazy(() => import('./Below'));
 
 /** A slim bar below desktop width, which also says which contract is showing: the desktop top navigation carries the same two things. */
 function JudgeBar() {
-  const { instanceKey } = useApp();
+  const { instanceKey, info } = useApp();
   const awake = useBotsAwake();
+  const name = instanceKey === 'fast' ? 'Fast contract' : instanceKey === 'live' ? 'Main contract' : info.label;
   return (
     <div className="l-judgebar" data-testid="judge-bar">
-      <span>{instanceKey === 'fast' ? 'Fast contract' : 'Main contract'}<i> · {awake ? 'bots trading' : 'bots asleep'}</i></span>
+      <span>{name}<i> · {awake ? 'bots trading' : 'bots asleep'}</i></span>
       <a href={JUDGES_HREF} data-testid="judge-bar-link">For judges <b>5 checks ↓</b></a>
     </div>
   );

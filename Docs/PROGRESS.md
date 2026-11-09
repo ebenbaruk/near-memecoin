@@ -22,7 +22,7 @@ Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
 
 ## Points d'attention
 - Budget opérateur : 13,4 NEAR le 2026-11-08 au soir (23 NEAR perdus sur des comptes jetables d'une répétition qui a planté, script corrigé). Il faut plus pour les bots et le tournage : refinancer au faucet une fois le délai passé (429 reçu vers 17:35 le 8 nov, retry 8 h, relance programmée à 01:45 le 9).
-- Surveillance : `scripts/watch-bots.ts` écrit et testé, timer utilisateur non installé (accord du propriétaire attendu).
+- Surveillance : refusée par le propriétaire le 2026-11-10 ; pas de timer. `scripts/watch-bots.ts` reste disponible pour un contrôle à la main.
 - Railway : projet `anyone-can-rug`, service `web`, bots activés (`bot-1` à `bot-5.acr-bots.testnet`, clés dans `.env` et les variables Railway). Déployer avec `railway up --service web` depuis un clone propre (jamais depuis le dossier de travail).
 - **Faucet limité par IP** : `helper.nearprotocol.com` a répondu `429 Rate limit exceeded, retry in 8 hours` après une dizaine de créations. L'opérateur `acr-ops.testnet` a environ 54 NEAR (cible 150). Ne pas relancer `scripts/fund-operator.sh` avant le délai. Impact sur `Try it, no wallet` et `try:testnet` : le flux doit tenir le 429 proprement, et les juges auront leur propre IP.
 

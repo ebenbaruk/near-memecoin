@@ -9,8 +9,14 @@ A NEP-141 memecoin on NEAR testnet where the rug is a public, priced, permission
 | Live demo | https://web-production-69c90.up.railway.app |
 | Contract (simulated parameters) | [`anyonecanrug.testnet`](https://testnet.nearblocks.io/address/anyonecanrug.testnet) |
 | Contract (fast demo instance, tuned to rug often) | [`rugfast.acr-ops.testnet`](https://testnet.nearblocks.io/address/rugfast.acr-ops.testnet) |
-| Video | TBD_VIDEO |
+| Video (65 s) | [`rug-demo.mp4`](docs-assets/video/rug-demo.mp4) (16:9), [`rug-demo-portrait.mp4`](docs-assets/video/rug-demo-portrait.mp4) (4:5) |
 | Demo post on X | TBD_X_POST |
+
+![The landing page: the pot, the rug price, and what stealing it would make right now](docs-assets/shots/landing.webp)
+
+| The game, live on testnet | For judges: five requirements, five checks |
+|---|---|
+| ![The game screen](docs-assets/shots/game.webp) | ![The judges section](docs-assets/shots/judges.webp) |
 
 ## The mechanic in 10 seconds
 
@@ -76,6 +82,8 @@ Rust, `near-sdk` 5.30.1, 18 decimals. Source: `contracts/anyone-can-rug/`. Commi
 | Deploy + init, one transaction | [`DfCp5P3S…`](https://testnet.nearblocks.io/txns/DfCp5P3SsivRPvDmmB2V5PnGYMxMp4jcwxaUz3DxJdkA) | [`E7hkM1C2…`](https://testnet.nearblocks.io/txns/E7hkM1C2eWpDUA4b4Up67LgJdFuragqJHbBmQYQPnPDw) |
 | Key deletion | [`45F2veW8…`](https://testnet.nearblocks.io/txns/45F2veW87pLfT4GPxRhUQUrResnpqPixbGo8qjj1TZWa) | [`7hfDsLZo…`](https://testnet.nearblocks.io/txns/7hfDsLZo4MLeDTjpoHf84fzb2hzTwMum3MmrDeN2imwB) |
 
+A third instance, `film.acr-ops.testnet`, was used only to shoot the video: same wasm, the fast parameters (`deploy/film.json`, symbol `RUGFILM`), deployed in [`DXnfSBh7…`](https://testnet.nearblocks.io/txns/DXnfSBh71K12KP3nR1ZprTzkzDTt3GNJspdGR8DroXF6), keys deleted after the shoot in [`9zos1hdd…`](https://testnet.nearblocks.io/txns/9zos1hdddw2fkmByKLz1UA2ZGhfnh1N1TC55o6MPNp3G). `verify` does not cover it.
+
 ## Simulation: 60 days, before parameters were chosen
 These results come from **modelled agents whose behaviour we assumed**. Nothing is fitted to real trading data.
 They compare parameter choices. They are not a forecast and imply no return for anyone.
@@ -117,7 +125,8 @@ The viable band is tau/f between 1.0 and 10.0, measured on a 20-seed screen of 5
 ## Limits, honestly
 
 - **"Anyone can take the pot" is the whole promise.** Fees are 2 % per trade, in and out. Bots and whales will probably win. In the simulation, 88 % of games without an attentive bot saw no rug, and a 25 % holder took 99 % of the rugs. Behaviour in the simulation is assumed, not measured.
-- **Demo activity comes from bots.** They only call public methods, and their accounts are labelled. None of it is a community. The video uses a dedicated instance of the same wasm.
+- **Demo activity comes from bots.** They only call public methods, and their accounts are labelled. None of it is a community.
+- **How the video was made.** It is the real page on `film.acr-ops.testnet`, driven by a script (`scripts/video/`), with real testnet transactions. Its trades come from `bot-6.acr-bots.testnet`, a labelled bot. The visitor's throwaway account was created by our operator account, with the page's own key and the faucet's 10 NEAR, because the public faucet was rate-limiting our IP; its NEAR went back to the operator afterwards. In the lost race at the end, the script made bot-6 send its real rug while the visitor was holding the button; the page saw that the round had moved and sent nothing. A rug that does reach the contract late is refused with `E_ROUND_STALE` (contract tests). Parts of the waiting time are sped up.
 - **The floor is a position on a bonding curve**, reachable only by selling along that curve. It says nothing about value.
 - **Burned tokens' NEAR is locked forever** in the reserve. This is the design.
 - **Sybil resistance: there is none for the threshold, and none is claimed.** `T` is a share of supply, not a per-account limit. An attacker with many accounts gains nothing and pays gas and registration, which only slows them down. It is enough for a testnet demo and nothing more.
