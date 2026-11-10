@@ -176,7 +176,7 @@ const delays = SHOTS.map((s, i) => `[${i + 1}:a]aresample=48000,aformat=channel_
 const mix = `${delays};${SHOTS.map((_, i) => `[n${i}]`).join('')}amix=inputs=${SHOTS.length}:normalize=0,apad=whole_dur=${TOTAL},asplit=2[voice][voicek];`
   + `[0:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.55[mus];[mus][voicek]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[duck];`
   + `[duck][voice]amix=inputs=2:normalize=0,atrim=duration=${TOTAL},loudnorm=I=-16:TP=-1.5:LRA=11[a]`;
-ff(['-i', `${TMP}/music.wav`, ...vIns, '-filter_complex', mix, '-map', '[a]', '-c:a', 'pcm_s16le', `${TMP}/sound.wav`]);
+ff(['-i', `${TMP}/music.wav`, ...vIns, '-filter_complex', mix, '-map', '[a]', '-ar', '48000', '-c:a', 'pcm_s16le', `${TMP}/sound.wav`]);
 
 const enc = ['-c:v', 'libx264', '-preset', 'slow', '-crf', '21', '-pix_fmt', 'yuv420p', '-r', String(FPS), '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart'];
 ff(['-i', `${TMP}/picture.mp4`, '-i', `${TMP}/sound.wav`, '-map', '0:v', '-map', '1:a', ...enc, '-shortest', `${OUT}/rug-demo-portrait.mp4`]);
