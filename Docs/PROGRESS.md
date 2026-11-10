@@ -1,6 +1,6 @@
 # Avancement
 
-**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte en ligne (commit `30333a3`) : landing pleine largeur avec schémas et section juges, jeu desktop. Reste : retour du propriétaire sur le design, un rug de bot au journal, instance `film` et vidéo, accords humains.
+**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte validée par le propriétaire, vidéo tournée (instance `film`, 0 clé). Rugs de bot au journal : `bot-1` a pris les rounds 2 et 3 de `rugfast`. Historique purgé et dépôt **public** le 2026-11-11 (accord du propriétaire) ; `verify` 33/33 sur clone public anonyme. Reste : post X (par le propriétaire), consentement, soumission unique, push sur TokenGo.
 
 ## Par où commencer
 1. Lire `Docs/spec/10-spec.md`, puis la partie concernée de `Docs/spec/`.
@@ -17,8 +17,10 @@
 
 - 2026-11-09 : refonte déployée. `npm ci && npx playwright install chromium && npm run verify` sur clone neuf sans `.env` : 33/33, 0 skip. `npm run e2e` : 184 réussis, 10 ignorés (propres à un viewport). `e2e:prod` : 6/6. Sur le site en ligne, le refus du faucet (429, retry 9 h) s'affiche proprement ; la transaction navigateur avec vrai faucet reste à faire.
 
+- 2026-11-11 : historique purgé (`git-filter-repo --replace-text var/purge-rules.txt` : e-mail, Telegram, section outils de `CLAUDE.md`), force-push, dépôt rendu public, avec accord du propriétaire. Sauvegarde avant purge : `~/near-memecoin-backup-pre-purge.bundle` (hors dépôt). Audio des vidéos passé en 48 kHz pour X. Kit X (vidéos et images des deux projets) dans `~/x-kit` (hors dépôt).
+
 ## Reste à valider par le propriétaire, au moment venu
-Dépôt public, purge de l'historique, post X, soumission, push sur TokenGo.
+Post X (publié par le propriétaire), texte de consentement, soumission unique, push sur TokenGo (en dernier).
 
 ## Points d'attention
 - Budget opérateur : 13,4 NEAR le 2026-11-08 au soir (23 NEAR perdus sur des comptes jetables d'une répétition qui a planté, script corrigé). Il faut plus pour les bots et le tournage : refinancer au faucet une fois le délai passé (429 reçu vers 17:35 le 8 nov, retry 8 h, relance programmée à 01:45 le 9).
