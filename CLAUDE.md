@@ -15,11 +15,6 @@ Le 1er projet est **TokenGo** (catégorie `games`, déjà soumis), dans `../Toke
 
 **Pour démarrer une session : lire `Docs/PROGRESS.md`, puis `Docs/spec/10-spec.md`, et continuer sans demander.** Décider seul, sauf ce qui est listé dans « Jamais sans confirmation ». Sous-agents et workflows sans limite de tokens pour le build (accord du propriétaire).
 
-
-
-
-
-
 ## Règles du hackathon qui ne se négocient pas
 - **Deux projets par personne au maximum, indépendants, et chaque README cite l'autre** (règle Q-015). Donc :
   - le README de ce projet a une section « Other project by the same author » qui pointe vers TokenGo ;
