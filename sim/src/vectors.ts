@@ -201,10 +201,28 @@ export class VectorMachine {
 
 const HUGE = 10n ** 38n;
 
+/**
+ * x^f for f in [0, 1), from the bits of f and repeated square roots. Math.log and Math.exp may differ in the
+ * last bit between CPUs (ARM64 and x86 gave different vectors); sqrt, * and / are correctly rounded IEEE 754
+ * operations, so this gives the same double everywhere and the vectors regenerate byte for byte on any machine.
+ */
+function powFrac(x: number, f: number): number {
+  let out = 1;
+  let root = x;
+  for (let i = 0; i < 40; i++) {
+    root = Math.sqrt(root);
+    f *= 2;
+    if (f >= 1) {
+      out *= root;
+      f -= 1;
+    }
+  }
+  return out;
+}
+
 function logUniform(rng: Rng, low: bigint, high: bigint): bigint {
-  const lo = Math.log(Number(low));
-  const hi = Math.log(Number(high));
-  const v = BigInt(Math.round(Math.exp(lo + (hi - lo) * rng.next())));
+  const lo = Number(low);
+  const v = BigInt(Math.round(lo * powFrac(Number(high) / lo, rng.next())));
   return v < low ? low : v > high ? high : v;
 }
 
@@ -226,7 +244,7 @@ function randomParams(rng: Rng): Params {
 }
 
 function near(rng: Rng, lo: number, hi: number): bigint {
-  const v = Math.exp(Math.log(lo) + (Math.log(hi) - Math.log(lo)) * rng.next());
+  const v = lo * powFrac(hi / lo, rng.next());
   return BigInt(Math.floor(v * 1e6)) * 10n ** 18n;
 }
 

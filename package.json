@@ -24,7 +24,8 @@
     "e2e": "playwright test",
     "e2e:prod": "playwright test -c e2e-prod/playwright.config.ts",
     "shots": "playwright test && mkdir -p docs-assets/shots && cp test-results/shots/*.png docs-assets/shots/",
-    "snapshot": "tsx scripts/snapshot.ts"
+    "snapshot": "tsx scripts/snapshot.ts",
+    "charts:chain": "tsx scripts/chain-charts.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.65.0",
