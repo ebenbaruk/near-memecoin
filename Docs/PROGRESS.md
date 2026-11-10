@@ -1,6 +1,6 @@
 # Avancement
 
-**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte validée par le propriétaire, vidéo tournée (instance `film`, 0 clé). Rugs de bot au journal : `bot-1` a pris les rounds 2 et 3 de `rugfast`. Historique purgé et dépôt **public** le 2026-11-11 (accord du propriétaire) ; `verify` 33/33 sur clone public anonyme. Reste : post X (par le propriétaire), consentement, soumission unique, push sur TokenGo.
+**Phase actuelle : 3, le build.** Contrats finaux déployés et verrouillés (0 clé), démo en ligne sur https://web-production-69c90.up.railway.app, `verify` vert (33 contrôles). Bots actifs depuis le 2026-11-09 vers 10:40 (heure machine). Refonte validée par le propriétaire, vidéo tournée (instance `film`, 0 clé). Rugs de bot au journal : `bot-1` a pris les rounds 2 et 3 de `rugfast`. Historique purgé et dépôt **public** le 2026-11-11 (accord du propriétaire) ; `verify` 33/33 sur clone public anonyme. **Soumis le 2026-11-10 à 23:26:55 UTC (HTTP 201).** Post X : https://x.com/r4b1nj0i3/status/2120292559318606221. TokenGo cite ce projet. CI verte. Reste seulement : garder la démo en ligne jusqu'au 25 nov, puis couper les bots.
 
 ## Par où commencer
 1. Lire `Docs/spec/10-spec.md`, puis la partie concernée de `Docs/spec/`.
@@ -19,8 +19,10 @@
 
 - 2026-11-11 : historique purgé (`git-filter-repo --replace-text var/purge-rules.txt` : e-mail, Telegram, section outils de `CLAUDE.md`), force-push, dépôt rendu public, avec accord du propriétaire. Sauvegarde avant purge : `~/near-memecoin-backup-pre-purge.bundle` (hors dépôt). Audio des vidéos passé en 48 kHz pour X. Kit X (vidéos et images des deux projets) dans `~/x-kit` (hors dépôt).
 
-## Reste à valider par le propriétaire, au moment venu
-Post X (publié par le propriétaire), texte de consentement, soumission unique, push sur TokenGo (en dernier).
+- 2026-11-11 : README réécrit en profondeur (pitch, round réel, graphique de l'historique on-chain, maths, attaques, choix, pourquoi NEAR, FAQ). CI GitHub verte (vecteurs déterministes sur x86). Soumission envoyée une fois, HTTP 201. README de TokenGo mis à jour (Q-015).
+
+## Reste
+Rien côté build. Démo en ligne au moins jusqu'au 18 nov, idéalement jusqu'au 25 ; ensuite `BOTS_ENABLED=0` sur Railway. Toute correction de la soumission passe par https://nearhackathon.com/request-changes.
 
 ## Points d'attention
 - Budget opérateur : 13,4 NEAR le 2026-11-08 au soir (23 NEAR perdus sur des comptes jetables d'une répétition qui a planté, script corrigé). Il faut plus pour les bots et le tournage : refinancer au faucet une fois le délai passé (429 reçu vers 17:35 le 8 nov, retry 8 h, relance programmée à 01:45 le 9).
